@@ -1,24 +1,43 @@
-import { Slot } from '@radix-ui/react-slot'
-import { ReactNode, useState } from 'react'
+import Image from 'next/image'
+import { ReactNode, useEffect, useState } from 'react'
 import { HiOutlineMenu } from 'react-icons/hi'
 import { IoMdClose } from 'react-icons/io'
-import { AiOutlineSetting } from 'react-icons/ai'
 import { styled } from '../../styles'
 import { Avatar } from '../Avatar'
+import LogoCapf from '../../assets/images/logoCapf.svg'
+import { Button } from '../Button'
 import { Text } from '../Text'
-import ImageAvatar from '../../assets/images/Avatar.svg'
-
+import { FiLogOut } from 'react-icons/fi'
+import { BsFillSunFill, BsMoon } from 'react-icons/bs'
+import Link from 'next/link'
+import { useTheme } from 'next-themes'
 const Container = styled('header', {
   position: 'relative',
   backgroundColor: '$green500',
   width: '250px',
   minHeight: '100vh',
   transition: 'all 0.3s ease-in-out',
+  paddingTop: '$20',
+
+  '@bp1': {
+    position: 'absolute',
+    paddingTop: '$8',
+    visibility: 'hidden',
+    width: '0',
+    transition: 'all 0.3s ease-in-out',
+    zIndex: 1,
+  },
 
   variants: {
     openMenu: {
       true: {
         width: '100px',
+
+        '@bp1': {
+          visibility: 'initial',
+          width: '100%',
+          transition: 'all 0.3s ease-in-out',
+        },
       },
       false: {},
     },
@@ -26,7 +45,6 @@ const Container = styled('header', {
 })
 
 const Navbar = styled('nav', {
-  position: 'relative',
   transition: 'all 0.3s ease-in-out',
   variants: {
     openMenu: {
@@ -36,7 +54,7 @@ const Navbar = styled('nav', {
             svg: {
               margin: 'auto',
             },
-            span: {
+            p: {
               display: 'none',
             },
           },
@@ -47,8 +65,31 @@ const Navbar = styled('nav', {
             fontSize: '$sm',
           },
         },
+
+        '@bp1': {
+          ul: {
+            li: {
+              paddingLeft: '$10',
+              svg: {
+                margin: '0px',
+              },
+              p: {
+                display: 'block',
+              },
+              '.line': {
+                display: 'none',
+              },
+            },
+          },
+        },
       },
-      false: {},
+      false: {
+        '@bp1': {
+          ul: {
+            display: 'none',
+          },
+        },
+      },
     },
   },
 })
@@ -56,6 +97,10 @@ const Navbar = styled('nav', {
 const Ul = styled('ul', {
   listStyle: 'none',
   padding: '0',
+
+  a: {
+    textDecoration: 'none',
+  },
 })
 
 const Li = styled('li', {
@@ -64,10 +109,9 @@ const Li = styled('li', {
   gap: '$5',
   padding: '$4 $3',
   margin: '$2 0',
-  color: '$white',
 
   '&:hover': {
-    backgroundColor: '$green600',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
   },
 
   svg: {
@@ -94,26 +138,57 @@ const Line = styled('div', {
   },
 })
 
-const ToggleMenu = styled(Slot, {
-  position: 'relative',
-  top: '2rem',
-  left: '2rem',
-  width: '2rem',
-  height: '2rem',
-  color: '$yellow900',
+const ToggleMenu = styled('div', {
+  borde: '1px solid red',
+  position: 'absolute',
+  backgroundColor: '$green500',
+  padding: '$4 0',
+  paddingLeft: '$8',
   border: 'none',
   transition: 'all 300ms ease-in-out',
   marginBottom: '$10',
+  pointerEvents: 'none',
+  zIndex: 2,
+
+  img: {
+    display: 'none',
+  },
+
+  button: {
+    backgroundColor: 'transparent',
+    border: 'none',
+    pointerEvents: 'initial',
+
+    svg: {
+      minWidth: '2rem',
+      minHeight: '2rem',
+      color: '$yellow900',
+    },
+  },
 
   '@bp1': {
+    width: '100%',
     display: 'flex',
-    justifyContent: 'center',
+    paddingRight: '$8',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    zIndex: 2,
+
+    img: {
+      display: 'block',
+      maxWidth: '5rem',
+      maxHeight: '5rem',
+    },
   },
 
   variants: {
     openMenu: {
-      true: {},
+      true: {
+        backgroundColor: 'transparent',
+        img: {
+          visibility: 'hidden',
+        },
+      },
       false: {},
     },
   },
@@ -125,13 +200,85 @@ interface LineProps {
 
 const UserType = ({ children }: LineProps) => {
   return (
-    <Line>
+    <Line className="line">
       <div />
       <span>{children}</span>
       <div />
     </Line>
   )
 }
+
+const ButtonsTheLog = styled('div', {
+  position: 'absolute',
+  width: '100%',
+  bottom: 0,
+  'p:first-letter ': { textTransform: 'capitalize' },
+
+  display: 'flex',
+  flexDirection: 'column',
+
+  a: {
+    textDecoration: 'none',
+  },
+
+  button: {
+    margin: '$2 0',
+    padding: '$4 $3',
+    backgroundColor: 'transparent',
+    fontWeight: 'normal',
+
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+
+    p: {
+      marginLeft: '$4',
+    },
+
+    svg: {
+      fontSize: '$2xl',
+      color: '$yellow900',
+    },
+  },
+
+  '@bp1': {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
+
+  variants: {
+    openMenu: {
+      true: {
+        p: {
+          display: 'none',
+        },
+        a: {
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+
+        svg: {
+          margin: 'auto',
+        },
+
+        '@bp1': {
+          p: {
+            display: 'block',
+          },
+          svg: {
+            margin: '0px',
+          },
+        },
+      },
+      false: {
+        '@bp1': {
+          display: 'none',
+        },
+      },
+    },
+  },
+})
 
 interface HeaderContainerProps {
   children: ReactNode
@@ -144,96 +291,60 @@ interface HeaderContainerProps {
   registration: string
 }
 
-const HeaderContainer = ({
-  children,
-  imageUserUrl,
-  name,
-  status,
-  college,
-  course,
-  registration,
-}: HeaderContainerProps) => {
+const HeaderContainer = ({ children }: HeaderContainerProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const nameArray = name.split(' ')
+  const { theme, setTheme } = useTheme()
+
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    const url = window.location.pathname
+
+    console.log(url)
+  }, [])
+
+  // pegar url
+
+  const user = {
+    name: 'Kalil Aziz Santos Chami',
+    status: 'Aluno',
+    imageUserUrl: '',
+    college: 'Puc',
+    course: 'Medicina',
+    registration: '202002444',
+  }
   return (
-    <Container openMenu={isMenuOpen}>
-      <ToggleMenu
-        openMenu={isMenuOpen}
-        onClick={() => setIsMenuOpen((op) => !op)}
-      >
-        {isMenuOpen ? <IoMdClose /> : <HiOutlineMenu />}
+    <>
+      <ToggleMenu openMenu={isMenuOpen}>
+        <Image src={LogoCapf} alt="" />
+        <button onClick={() => setIsMenuOpen((op) => !op)}>
+          {isMenuOpen ? <IoMdClose /> : <HiOutlineMenu />}
+        </button>
       </ToggleMenu>
-      <Avatar.Root
-        name={name}
-        status={status}
-        imageUserUrl={imageUserUrl}
-        openMenu={isMenuOpen}
-      >
-        <Avatar.Portal>
-          <Avatar.Content>
-            <Avatar.Settings href="/">
-              <AiOutlineSetting />
-            </Avatar.Settings>
-            <Avatar.Container
-              flexColumn
-              css={{
-                alignItems: 'center',
-              }}
+      <Container openMenu={isMenuOpen}>
+        <Avatar openMenu={isMenuOpen} infoUser={user} />
+        <Navbar openMenu={isMenuOpen}>
+          <Ul>{children}</Ul>
+        </Navbar>
+        <ButtonsTheLog openMenu={isMenuOpen}>
+          {mounted && (
+            <Button
+              onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
             >
-              <Avatar.Img
-                size="large"
-                src={imageUserUrl || ImageAvatar}
-                width={50}
-                height={50}
-                alt="Radix UI"
-              />
-              <Avatar.Container
-                flexColumn
-                gap="large"
-                css={{
-                  alignItems: 'center',
-                  minWidth: '100%',
-                }}
-              >
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Text
-                    colors="green50"
-                    size="lg"
-                    css={{
-                      fontWeight: 'bold',
-                    }}
-                  >{`${nameArray[0]} ${nameArray[1]}`}</Text>
-                  <Text colors="green900">{status}</Text>
-                </div>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    minWidth: '100%',
-                  }}
-                >
-                  <Text colors="green50">Faculdade: {college}</Text>
-                  <Text colors="green50">Curso: {course}</Text>
-                </div>
-                <Avatar.Container gap="large">
-                  <Avatar.Container gap="small">
-                    <Text colors="green50">Matrícula: {registration}</Text>
-                  </Avatar.Container>
-                </Avatar.Container>
-              </Avatar.Container>
-            </Avatar.Container>
-            <Avatar.Arrow />
-          </Avatar.Content>
-        </Avatar.Portal>
-      </Avatar.Root>
-      <Navbar openMenu={isMenuOpen}>{children}</Navbar>
-    </Container>
+              {theme === 'light' ? <BsFillSunFill /> : <BsMoon />}
+              <Text colors="white">{theme}</Text>
+            </Button>
+          )}
+          <Link href="/">
+            <Button>
+              <FiLogOut style={{ transform: 'rotate(180deg)' }} />
+              <Text colors="white">Logout</Text>
+            </Button>
+          </Link>
+        </ButtonsTheLog>
+      </Container>
+    </>
   )
 }
 

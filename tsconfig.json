@@ -15,6 +15,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/context/LeagueProvider/index.jsx", "src/context/LeagueProvider/types.js", "src/context/LeagueProvider/reducer.js", "src/context/LeagueProvider/data.js", "src/context/LeagueProvider/actions.js", "src/context/LeagueProvider/context.js"],
   "exclude": ["node_modules"]
 }
