@@ -1,6 +1,22 @@
 import { createContext } from 'react'
 
+export interface LeaguesProps {
+  id: string
+  name: string
+  initials: string
+  orientation: string
+  description: string
+  imageURL: string
+  status: string
+  events: []
+}
+
 export const LeagueContext = createContext({
-  state: {},
+  state: {
+    league: {} as LeaguesProps[],
+    leagueActive: {} as LeaguesProps[],
+    leagueInactive: {} as LeaguesProps[],
+    nextIndiceLeague: 0,
+  },
   dispatch: (action: any) => action,
 })

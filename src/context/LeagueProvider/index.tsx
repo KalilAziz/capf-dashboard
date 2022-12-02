@@ -14,23 +14,12 @@ import {
   setLeagueInactive,
   setNextIndiceLeague,
 } from './action'
-import { LeagueContext } from './context'
+import { LeagueContext, LeaguesProps } from './context'
 import { data } from './data'
 import { reducer } from './reducer'
 
 interface LeagueProviderProps {
   children: ReactNode
-}
-
-interface LeaguesProps {
-  id: string
-  name: string
-  initials: string
-  orientation: string
-  description: string
-  imageURL: string
-  status: string
-  events: []
 }
 
 export const LeagueProvider = ({ children }: LeagueProviderProps) => {

@@ -53,7 +53,7 @@ const Liga = () => {
       if (docSnap.exists()) {
         setLeague(docSnap.data() as League)
       } else {
-        ;('No such document!')
+        console.log('No such document!')
       }
     }
     getLeague()

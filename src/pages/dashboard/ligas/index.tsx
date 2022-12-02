@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { BiSearchAlt2 } from 'react-icons/bi'
 import { Button } from '../../../components/Button'
@@ -10,31 +10,11 @@ import { SelectStatus } from '../../../components/SelectStatus'
 import { Text } from '../../../components/Text'
 import { Search } from '../../../styles/pages/dashboard/ligas'
 
-import { firebaseApp } from '../../../config/firebaseConfig'
-import {
-  collection,
-  getFirestore,
-  onSnapshot,
-  orderBy,
-  query,
-  where,
-} from 'firebase/firestore'
 import { Leagues } from '../../../components/Leagues'
-
-interface LeaguesProps {
-  id: string
-  name: string
-  initials: string
-  orientation: string
-  description: string
-  imageURL: string
-  status: string
-  events: []
-}
+import { LeagueContext } from '../../../context/LeagueProvider/context'
 
 const League = () => {
   const [option, setOption] = useState('')
-  const [leagues, setLeagues] = useState<LeaguesProps[]>([])
   const [searchText, setSearchText] = useState('')
 
   const options = [
@@ -43,36 +23,12 @@ const League = () => {
     ['inactive', 'Inativo'],
   ]
 
-  useEffect(() => {
-    const getLeagues = async () => {
-      const useCollactionRef = query(
-        collection(getFirestore(firebaseApp), 'Leagues'),
-        where('id', '>', 0),
-        orderBy('id', 'asc'),
-      )
-      onSnapshot(useCollactionRef, (querySnapshot) => {
-        const leagues: LeaguesProps[] = []
-        querySnapshot.forEach((doc) => {
-          doc.data()
-          leagues.push({ ...doc.data() } as LeaguesProps)
-        })
-        setLeagues(leagues.slice(0).reverse())
-        setOption('all')
-      })
-    }
-
-    getLeagues()
-  }, [])
+  const { state } = useContext(LeagueContext)
 
   // filter searchText
-  const filteredLeagues = leagues.filter((league) => {
+  const filteredLeagues = state.league.filter((league) => {
     return league.name.toLowerCase().includes(searchText.toLowerCase())
   })
-
-  const leaguesActive = leagues.filter((league) => league.status === 'active')
-  const leaguesInactive = leagues.filter(
-    (league) => league.status === 'inactive',
-  )
 
   return (
     <Dashboard>
@@ -120,12 +76,14 @@ const League = () => {
       </Search>
 
       {searchText !== '' && <Leagues leagues={filteredLeagues} />}
-      {searchText === '' && option === 'all' && <Leagues leagues={leagues} />}
+      {searchText === '' && option === 'all' && (
+        <Leagues leagues={state.league} />
+      )}
       {searchText === '' && option === 'active' && (
-        <Leagues leagues={leaguesActive} />
+        <Leagues leagues={state.leagueActive} />
       )}
       {searchText === '' && option === 'inactive' && (
-        <Leagues leagues={leaguesInactive} />
+        <Leagues leagues={state.leagueInactive} />
       )}
     </Dashboard>
   )
