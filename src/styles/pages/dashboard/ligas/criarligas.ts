@@ -41,10 +41,24 @@ export const Content = styled('div', {
   },
 
   button: {
+    width: 'calc(100% - $6)',
+    height: '$7',
     marginTop: 'auto',
     marginBottom: '$1',
-    width: 'calc(100% - $12)',
     marginLeft: 'auto',
+    cursor: 'pointer',
+
+    display: 'flex',
+    alignItems: 'center',
+
+    '&:disabled': {
+      visibility: '0.5',
+      cursor: 'not-allowed',
+      svg: {
+        display: 'block',
+        margin: 'auto',
+      },
+    },
 
     p: {
       display: 'flex',
@@ -52,6 +66,10 @@ export const Content = styled('div', {
       justifyContent: 'center',
       textAlign: 'center',
       margin: 'auto',
+    },
+
+    'input[type="file"]': {
+      cursor: 'pointer',
     },
 
     '@bp1': {

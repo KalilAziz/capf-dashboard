@@ -102,7 +102,7 @@
 }
 
 /* Texto do mes */
-button span{
+.react-calendar button span{
   color: #006930;
   text-transform: capitalize;
   font-weight: bold;

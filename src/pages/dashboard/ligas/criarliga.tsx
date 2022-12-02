@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FaUsers } from 'react-icons/fa'
 import { Box } from '../../../components/Box'
 import { Button } from '../../../components/Button'
@@ -11,9 +11,15 @@ import useMediaQuery from '../../../hooks/MediaQuery'
 import {
   Container,
   Content,
-} from '../../../styles/pages/dashboard/ligas/criarligas'
+} from '../../../styles/pages/dashboard/ligas/criarLigas'
 
-import { addDoc, collection, getFirestore } from 'firebase/firestore'
+import {
+  collection,
+  doc,
+  getDocs,
+  getFirestore,
+  setDoc,
+} from 'firebase/firestore'
 import { firebaseApp } from '../../../config/firebaseConfig'
 import {
   getStorage,
@@ -25,96 +31,54 @@ import {
 import 'react-toastify/dist/ReactToastify.css'
 import { toast, ToastContainer } from 'react-toastify'
 import { AiOutlineCloudUpload } from 'react-icons/ai'
+import { Looping } from '../../../components/Loop'
+import { useRouter } from 'next/router'
 
 const CreateLeague = () => {
+  // Conect to firebase
   const db = getFirestore(firebaseApp)
-  const useCollactionRef = collection(db, 'Leagues')
-  // storage
+  // FireStorage
   const storage = getStorage(firebaseApp)
 
   const viewButton = useMediaQuery('(min-width: 640px)')
+
   const [name, setName] = useState('')
   const [initials, setInitials] = useState('')
   const [description, setDescription] = useState('')
   const [orientation, setOrientation] = useState('')
-  const [image, setImage] = useState('')
-  const [imageData, setImageData] = useState<File | null>(null)
+  const [imageURL, setImageURL] = useState('')
+  const [chargeImage, setChargeImage] = useState(false)
+  const [leagues, setLeagues] = useState<any>([])
 
-  const [progress, setProgress] = useState(0)
+  const valueNextLeague = leagues.length + 1
 
-  const handleCreateLeague = () => {
-    if (!name) {
-      toast.warn('Preencha o Nome da Liga', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'dark',
-      })
-      return
+  const router = useRouter()
+
+  useEffect(() => {
+    const getLeagues = async () => {
+      const useCollactionRef = collection(getFirestore(firebaseApp), 'Leagues')
+      const data = await getDocs(useCollactionRef)
+      const Leagues = await data.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }))
+      setLeagues(Leagues)
     }
-    if (!initials) {
-      toast.warn('Preencha a Sigla da Liga', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'dark',
-      })
-      return
-    }
-    if (!description) {
-      toast.warn('Preencha a Objetivos da Liga', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'dark',
-      })
-      return
-    }
-    if (!orientation) {
-      toast.warn('Preencha o campo de Orientador da Liga', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'dark',
-      })
-      return
-    }
+    getLeagues()
+  }, [])
+  /*
+  const handlaUpdate = async () => {
+    console.log('sendo chamado')
+    const washingtonRef = doc(db, 'Leagues', '1')
 
-    handleUpload()
-
-    const data = {
-      initials,
-      name,
-      description,
-      orientation,
-      image,
-    }
-
-    addDoc(useCollactionRef, data)
-
-    setInitials('')
-    setName('')
-    setDescription('')
-    setOrientation('')
-    setImage('')
-
-    toast.success('Liga criada com sucesso', {
+    await updateDoc(washingtonRef, {
+      events: arrayUnion({
+        name: 'Evento Teste 2',
+        data: '28/10/2022',
+        Objective: 'Evento Teste 2',
+      }),
+    })
+    toast.success('Evento Criado', {
       position: 'top-right',
       autoClose: 5000,
       hideProgressBar: false,
@@ -126,29 +90,79 @@ const CreateLeague = () => {
     })
   }
 
-  const handleUpload = () => {
-    const file = imageData
-    console.log(file)
+  */
+
+  const handleCreateLeague = async () => {
+    if (!name || !initials || !description || !orientation) {
+      toast.warn('Preencha os campos', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      })
+      return
+    }
+
+    /*
+    await updateDoc(LeagueRef, {
+      Leagues: arrayUnion(
+        createLeague(initials, name, description, orientation, imageURL),
+      ),
+    })
+    */
+
+    await setDoc(doc(db, 'Leagues', `${valueNextLeague}`), {
+      id: Number(valueNextLeague),
+      initials,
+      name,
+      description,
+      orientation,
+      imageURL,
+      events: [],
+      status: 'active',
+    })
+
+    console.log('salvei no firebase')
+
+    setInitials('')
+    setName('')
+    setDescription('')
+    setOrientation('')
+    setImageURL('')
+
+    toast.success('Liga criada com sucesso', {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'dark',
+    })
+
+    router.push('/dashboard/ligas')
+  }
+
+  const handleUpload = async (file: File) => {
     if (!file) return
+    setChargeImage(true)
 
     const storageRef = ref(storage, `imageLeague/${file.name}`)
-    const uploadTask = uploadBytesResumable(storageRef, file)
 
-    uploadTask.on(
-      'state_changed',
-      (snapshot) => {
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-        setProgress(progress)
-      },
-      (error) => {
-        alert(error)
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-          setImage(url)
-        })
-      },
-    )
+    await uploadBytesResumable(storageRef, file).then(() => {
+      getDownloadURL(storageRef).then(function (url) {
+        console.log(url)
+        console.log('salvei url')
+        setImageURL(url)
+        setChargeImage(false)
+      })
+    })
+    return console.log('upload')
   }
 
   return (
@@ -219,7 +233,7 @@ const CreateLeague = () => {
                     <input
                       style={{ display: 'none' }}
                       onChange={(event: any) =>
-                        setImageData(event.target.files[0])
+                        handleUpload(event.target.files[0])
                       }
                       type="file"
                       id="file"
@@ -228,7 +242,6 @@ const CreateLeague = () => {
                 </Button>
               </>
             )}
-            {!image && <progress value={progress} max="100" />}
           </Content>
           <Content>
             <label htmlFor="">
@@ -251,7 +264,9 @@ const CreateLeague = () => {
 
                   <input
                     style={{ display: 'none' }}
-                    onChange={handleUpload}
+                    onChange={(event: any) =>
+                      handleUpload(event.target.files[0])
+                    }
                     type="file"
                     id="file"
                   />
@@ -259,8 +274,12 @@ const CreateLeague = () => {
               </Button>
             )}
 
-            <Button onClick={handleCreateLeague}>
-              <Text colors="green500">Criar Liga</Text>
+            <Button disabled={chargeImage} onClick={handleCreateLeague}>
+              {chargeImage ? (
+                <Looping />
+              ) : (
+                <Text colors="green500">Criar Liga</Text>
+              )}
             </Button>
           </Content>
         </Container>

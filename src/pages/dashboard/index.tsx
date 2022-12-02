@@ -12,12 +12,16 @@ const Dashboard = () => {
 
   useEffect(() => {
     setMounted(true)
-    router.push('/dashboard/eventosdisponiveis')
   }, [])
+
+  useEffect(() => {
+    router.push('/dashboard/eventosdisponiveis')
+  })
+
   return (
     mounted && (
       <Container className={theme === 'dark' ? darkTheme : ''}>
-        <Looping />
+        <Looping css={{ fontSize: '$6xl' }} />
       </Container>
     )
   )

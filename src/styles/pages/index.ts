@@ -10,6 +10,10 @@ export const Container = styled('div', {
   display: 'flex',
   gap: '$1',
 
+  button: {
+    cursor: 'pointer',
+  },
+
   '@bp1': {
     gap: '0',
   },

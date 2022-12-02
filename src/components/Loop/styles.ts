@@ -11,6 +11,4 @@ export const Svg = styled(TbLoader, {
   animationName: `${spin}`,
   animationDuration: '0.7s',
   animationIterationCount: 'infinite',
-
-  fontSize: '$6xl',
 })

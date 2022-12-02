@@ -1,4 +1,3 @@
-import { Slot } from '@radix-ui/react-slot'
 import { ComponentProps } from 'react'
 import { styled } from '../../styles'
 
@@ -8,22 +7,21 @@ const inputRoot = styled('div', {
   gap: '$3',
   backgroundColor: '$green50',
   padding: '$1 $4',
-  borderRadius: '$sm',
-  border: '2px solid $green50',
+  borderRadius: '$xs',
 
   '&:focus-within': {
     borderColor: '$yellow900',
   },
 })
 
-export interface InputRootProps extends ComponentProps<typeof inputRoot> {}
-
-const inputIcon = styled(Slot, {
+const inputIcon = styled('div', {
   color: '$yellow900',
   fontSize: '$5xl',
-})
 
-export interface InputImageProps extends ComponentProps<typeof inputIcon> {}
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+})
 
 const inputInput = styled('input', {
   outline: 'none',

@@ -3,12 +3,12 @@ import { styled } from '../../styles'
 
 export const Box = styled('div', {
   overflow: 'hidden',
-  padding: '$3 $4',
+  padding: '$3 $5',
 
   variants: {
     border: {
-      lg: {
-        borderRadius: '$lg',
+      md: {
+        borderRadius: '$md',
       },
       full: {
         borderRadius: '$full',
@@ -21,7 +21,7 @@ export const Box = styled('div', {
   },
 
   defaultVariants: {
-    border: 'lg',
+    border: 'md',
     colors: 'green600',
   },
 })

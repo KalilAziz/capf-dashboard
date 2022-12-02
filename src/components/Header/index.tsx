@@ -219,6 +219,10 @@ const ButtonsTheLog = styled('div', {
 
   a: {
     textDecoration: 'none',
+
+    button: {
+      width: 'calc(100% - $6)',
+    },
   },
 
   button: {
@@ -226,6 +230,7 @@ const ButtonsTheLog = styled('div', {
     padding: '$4 $3',
     backgroundColor: 'transparent',
     fontWeight: 'normal',
+    border: 'none',
 
     display: 'flex',
     alignItems: 'center',
@@ -238,6 +243,11 @@ const ButtonsTheLog = styled('div', {
     svg: {
       fontSize: '$2xl',
       color: '$yellow900',
+    },
+
+    '&:hover': {
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      boxShadow: 'none',
     },
   },
 

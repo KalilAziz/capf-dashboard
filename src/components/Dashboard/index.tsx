@@ -13,14 +13,12 @@ import { darkTheme } from '../../styles'
 import { useTheme } from 'next-themes'
 import { ReactNode, useEffect, useState } from 'react'
 import { SectionContent } from '../SectionContent'
-
 interface DashboardProps {
   children: ReactNode
 }
 
 export const Dashboard = ({ children }: DashboardProps) => {
   const { theme } = useTheme()
-
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -39,46 +37,46 @@ export const Dashboard = ({ children }: DashboardProps) => {
         registration="202002444"
       >
         <Header.UserType>Alunos</Header.UserType>
-        <Link href="eventosdisponiveis">
+        <Link href="/dashboard/eventosdisponiveis">
           <Header.Li>
             <BsCalendar2Minus />
             <Text colors="white">Eventos Disponíveis</Text>
           </Header.Li>
         </Link>
-        <Link href="meuseventos">
+        <Link href="/dashboard/meuseventos">
           <Header.Li>
             <AiOutlineSchedule />
             <Text colors="white">Meus eventos</Text>
           </Header.Li>
         </Link>
-        <Link href="certificados">
+        <Link href="/dashboard/certificados">
           <Header.Li>
             <ImFilesEmpty />
             <Text colors="white">Certificados</Text>
           </Header.Li>
         </Link>
-        <Link href="projetos">
+        <Link href="/dashboard/projetos">
           <Header.Li>
             <IoMdRocket />
             <Text colors="white">Projetos</Text>
           </Header.Li>
         </Link>
         <Header.UserType>Gestor de ligas</Header.UserType>
-        <Link href="ligas">
+        <Link href="/dashboard/ligas">
           <Header.Li>
             <FaUsers />
             <Text colors="white">Ligas</Text>
           </Header.Li>
         </Link>
         <Header.UserType>Gestor da Colig</Header.UserType>
-        <Link href="usuarios">
+        <Link href="/dashboard/usuarios">
           <Header.Li>
             <TbUserSearch />
             <Text colors="white">Usuários</Text>
           </Header.Li>
         </Link>
         <Header.UserType>Administrador</Header.UserType>
-        <Link href="gestordosite">
+        <Link href="/dashboard/gestordosite">
           <Header.Li>
             <FiMonitor />
             <Text colors="white">Gestor do site</Text>
