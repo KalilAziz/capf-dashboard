@@ -17,6 +17,8 @@ export const LeagueContext = createContext({
     leagueActive: {} as LeaguesProps[],
     leagueInactive: {} as LeaguesProps[],
     nextIndiceLeague: 0,
+    events: [],
+    optionsEventsActive: [],
   },
   dispatch: (action: any) => action,
 })

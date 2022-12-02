@@ -18,6 +18,11 @@ export const reducer = (state: any, action: any) => {
     case types.SET_NEXT_INDICE_LEAGUE: {
       return { ...state, nextIndiceLeague: action.payload }
     }
+    case types.SET_EVENTS: {
+      return { ...state, events: action.payload }
+    }
+    case types.SET_OPTIONS_EVENTS_ACTIVE: {
+      return { ...state, optionsEventsActive: action.payload }
+    }
   }
-  return state
 }

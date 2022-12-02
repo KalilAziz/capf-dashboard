@@ -63,7 +63,7 @@ export const TableUserInfo = () => {
     }
 
     getLeagues()
-  }, [])(UsersBd)
+  }, [])
 
   return (
     <Container>

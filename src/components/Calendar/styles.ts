@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { styled } from '../../styles'
 import { Box } from '../Box'
 
@@ -88,4 +89,13 @@ export const CardEvents = styled('div', {
       backgroundColor: '$green50',
     },
   },
+})
+
+export const ImageNotEvents = styled(Image, {
+  display: 'block',
+  margin: '0 auto',
+  width: '100%',
+  maxWidth: '500px',
+  height: 'auto',
+  objectFit: 'cover',
 })

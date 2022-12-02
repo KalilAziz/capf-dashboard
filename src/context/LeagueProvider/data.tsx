@@ -4,4 +4,5 @@ export const data = {
   leagueInactive: [],
   nextIndiceLeague: 0,
   events: [],
+  optionsEventsActive: [],
 }

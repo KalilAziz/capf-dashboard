@@ -1,12 +1,4 @@
-import {
-  collection,
-  getFirestore,
-  onSnapshot,
-  orderBy,
-  query,
-  where,
-} from 'firebase/firestore'
-import { useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import Calendar from 'react-calendar'
 
 import {
@@ -14,7 +6,7 @@ import {
   MdOutlineKeyboardArrowLeft,
   MdOutlineKeyboardArrowRight,
 } from 'react-icons/md'
-import { firebaseApp } from '../../config/firebaseConfig'
+import { LeagueContext } from '../../context/LeagueProvider/context'
 import useMediaQuery from '../../hooks/MediaQuery'
 import { Button } from '../Button'
 import { Heading } from '../Heading'
@@ -24,27 +16,7 @@ import { Container, BoxComponent, OldEvents, CardEvents } from './styles'
 export const CalendarComponent = () => {
   const viewButton = useMediaQuery('(max-width: 1024px)')
   const [mount, setMount] = useState(false)
-  const [leagues, setLeagues] = useState<any>([])
-
-  useEffect(() => {
-    const getLeagues = async () => {
-      const useCollactionRef = query(
-        collection(getFirestore(firebaseApp), 'Leagues'),
-        where('status', '==', 'inactive'),
-        where('id', '>', 0),
-        orderBy('id', 'asc'),
-      )
-      onSnapshot(useCollactionRef, (querySnapshot) => {
-        const events: any[] = []
-        querySnapshot.forEach((doc) => {
-          events.push(doc.data())
-        })
-        setLeagues(events.slice(0).reverse())
-      })
-    }
-
-    getLeagues()
-  }, [])
+  const { state } = useContext(LeagueContext)
 
   return (
     <Container>
@@ -68,7 +40,7 @@ export const CalendarComponent = () => {
                 </Text>
               </Heading>
               {!viewButton &&
-                leagues?.map((league: any, key: any) => (
+                state.leagueInactive?.map((league: any, key: any) => (
                   <CardEvents key={key}>
                     <div className="content">
                       <div className="line" />
@@ -87,7 +59,7 @@ export const CalendarComponent = () => {
                 </Text>
               </Heading>
 
-              {leagues?.map((events: any, key: any) => (
+              {state.leagueInactive?.map((events: any, key: any) => (
                 <CardEvents key={key}>
                   <div className="content">
                     <div className="line" />
@@ -97,6 +69,12 @@ export const CalendarComponent = () => {
               ))}
             </>
           )}
+          {/**
+           * <ImageNotEvents src={notEvents} alt="No Events" />
+              <Text as="h2" size="sm" colors="black">
+                Não há ligas anteriores
+              </Text>
+           */}
           {viewButton && (
             <Button
               onClick={() => {

@@ -9,10 +9,12 @@ import {
 import { ReactNode, useEffect, useReducer } from 'react'
 import { firebaseApp } from '../../config/firebaseConfig'
 import {
+  setEvents,
   setLeague,
   setLeagueActive,
   setLeagueInactive,
   setNextIndiceLeague,
+  setOptionsEventsActive,
 } from './action'
 import { LeagueContext, LeaguesProps } from './context'
 import { data } from './data'
@@ -58,6 +60,25 @@ export const LeagueProvider = ({ children }: LeagueProviderProps) => {
           const nextIndiceLeague = leagues.length + 1
           setNextIndiceLeague(dispatch, nextIndiceLeague)
         }
+
+        // events disponíveis
+        const events: any[] = []
+        leaguesActive.forEach((league) => {
+          events.push([
+            ...league.events,
+            { idLeague: league.id, nameLeague: league.name },
+          ])
+        })
+
+        setEvents(dispatch, events)
+
+        // options events disponíveis
+        const optionsEvents: any[] = [['all', 'Todos']]
+        leaguesActive.forEach((league) => {
+          optionsEvents.push([league.name, league.initials])
+        })
+
+        setOptionsEventsActive(dispatch, optionsEvents)
       })
     }
 
