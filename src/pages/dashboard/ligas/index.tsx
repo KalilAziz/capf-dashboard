@@ -22,7 +22,7 @@ import {
 import { Leagues } from '../../../components/Leagues'
 
 interface LeaguesProps {
-  id: number
+  id: string
   name: string
   initials: string
   orientation: string
@@ -53,7 +53,7 @@ const League = () => {
       onSnapshot(useCollactionRef, (querySnapshot) => {
         const leagues: LeaguesProps[] = []
         querySnapshot.forEach((doc) => {
-          console.log(doc.data())
+          doc.data()
           leagues.push({ ...doc.data() } as LeaguesProps)
         })
         setLeagues(leagues.slice(0).reverse())

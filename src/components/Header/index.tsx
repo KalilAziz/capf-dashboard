@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useContext, useEffect, useState } from 'react'
 import { HiOutlineMenu } from 'react-icons/hi'
 import { IoMdClose } from 'react-icons/io'
 import { styled } from '../../styles'
@@ -11,6 +11,7 @@ import { FiLogOut } from 'react-icons/fi'
 import { BsFillSunFill, BsMoon } from 'react-icons/bs'
 import Link from 'next/link'
 import { useTheme } from 'next-themes'
+import { LoginContext } from '../../context/UserProvider/context'
 const Container = styled('header', {
   position: 'relative',
   backgroundColor: '$green500',
@@ -307,11 +308,10 @@ const HeaderContainer = ({ children }: HeaderContainerProps) => {
 
   const [mounted, setMounted] = useState(false)
 
+  const { signOut } = useContext(LoginContext)
+
   useEffect(() => {
     setMounted(true)
-    const url = window.location.pathname
-
-    console.log(url)
   }, [])
 
   // pegar url
@@ -346,8 +346,8 @@ const HeaderContainer = ({ children }: HeaderContainerProps) => {
               <Text colors="white">{theme}</Text>
             </Button>
           )}
-          <Link href="/">
-            <Button>
+          <Link href="">
+            <Button onClick={() => signOut()}>
               <FiLogOut style={{ transform: 'rotate(180deg)' }} />
               <Text colors="white">Logout</Text>
             </Button>

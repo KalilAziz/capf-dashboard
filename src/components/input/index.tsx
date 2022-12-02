@@ -29,6 +29,10 @@ const inputInput = styled('input', {
   width: '100%',
   height: '100%',
   backgroundColor: 'transparent',
+
+  '&:disabled': {
+    cursor: 'not-allowed',
+  },
 })
 
 export interface InputInputProps extends ComponentProps<typeof inputInput> {}

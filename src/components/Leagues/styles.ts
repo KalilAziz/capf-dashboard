@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { styled } from '../../styles'
 
 export const Container = styled('div', {
@@ -26,4 +27,13 @@ export const Pagination = styled('div', {
   'button:disabled': {
     opacity: 0.5,
   },
+})
+
+export const ImageNotEvents = styled(Image, {
+  display: 'block',
+  margin: '0 auto',
+  width: '100%',
+  maxWidth: '500px',
+  height: 'auto',
+  objectFit: 'cover',
 })

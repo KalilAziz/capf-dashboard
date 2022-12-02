@@ -8,8 +8,6 @@ interface ValidatorFormProps {
     counter: number,
     name: string,
     email: string,
-    password: string,
-    confirmPassword: string,
     student: boolean,
     college: string,
     course: string,
@@ -23,8 +21,6 @@ export const ValidatorForm: ValidatorFormProps = (
   counter,
   name,
   email,
-  password,
-  confirmPassword,
   student,
   college,
   course,
@@ -33,12 +29,7 @@ export const ValidatorForm: ValidatorFormProps = (
   period,
 ) => {
   if (counter === 1) {
-    if (
-      name === '' ||
-      email === '' ||
-      password === '' ||
-      confirmPassword === ''
-    ) {
+    if (name === '' || email === '') {
       toast.warn('Preencha todos os campos', {
         position: 'top-right',
         autoClose: 5000,
@@ -68,76 +59,6 @@ export const ValidatorForm: ValidatorFormProps = (
 
     if (!validator.isEmail(email)) {
       toast.warn('Email inválido', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'dark',
-      })
-      return false
-    }
-
-    if (password !== confirmPassword) {
-      toast.warn('As senhas não são iguais', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'dark',
-      })
-      return false
-    }
-
-    if (password.length < 8) {
-      toast.warn('A senha deve ter no mínimo 8 caracteres', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'dark',
-      })
-      return false
-    }
-
-    if (password.length > 20) {
-      toast.warn('A senha deve ter no máximo 20 caracteres', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'dark',
-      })
-      return false
-    }
-
-    if (validator.isLowercase(password)) {
-      toast.warn('A senha deve ter pelo menos uma letra maiúscula', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'dark',
-      })
-      return false
-    }
-
-    if (validator.isUppercase(password)) {
-      toast.warn('A senha deve ter pelo menos uma letra minúscula', {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,

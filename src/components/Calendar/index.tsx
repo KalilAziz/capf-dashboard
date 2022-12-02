@@ -1,4 +1,12 @@
-import { useState } from 'react'
+import {
+  collection,
+  getFirestore,
+  onSnapshot,
+  orderBy,
+  query,
+  where,
+} from 'firebase/firestore'
+import { useEffect, useState } from 'react'
 import Calendar from 'react-calendar'
 
 import {
@@ -6,23 +14,37 @@ import {
   MdOutlineKeyboardArrowLeft,
   MdOutlineKeyboardArrowRight,
 } from 'react-icons/md'
+import { firebaseApp } from '../../config/firebaseConfig'
 import useMediaQuery from '../../hooks/MediaQuery'
 import { Button } from '../Button'
 import { Heading } from '../Heading'
 import { Text } from '../Text'
-import { eventsOldMock } from './mock'
 import { Container, BoxComponent, OldEvents, CardEvents } from './styles'
 
 export const CalendarComponent = () => {
   const viewButton = useMediaQuery('(max-width: 1024px)')
   const [mount, setMount] = useState(false)
+  const [leagues, setLeagues] = useState<any>([])
 
-  const indexOfLastEvent = mount ? 4 : 0
-  const indexOfFirstEvent = 0
-  const currentEvents = eventsOldMock?.slice(
-    indexOfFirstEvent,
-    indexOfLastEvent,
-  )
+  useEffect(() => {
+    const getLeagues = async () => {
+      const useCollactionRef = query(
+        collection(getFirestore(firebaseApp), 'Leagues'),
+        where('status', '==', 'inactive'),
+        where('id', '>', 0),
+        orderBy('id', 'asc'),
+      )
+      onSnapshot(useCollactionRef, (querySnapshot) => {
+        const events: any[] = []
+        querySnapshot.forEach((doc) => {
+          events.push(doc.data())
+        })
+        setLeagues(events.slice(0).reverse())
+      })
+    }
+
+    getLeagues()
+  }, [])
 
   return (
     <Container>
@@ -33,7 +55,7 @@ export const CalendarComponent = () => {
           prev2Label={<MdOutlineKeyboardArrowLeft color="#006930" />}
           nextLabel={<MdOutlineKeyboardArrowRight color="#006930" />}
           next2Label={<MdOutlineKeyboardArrowRight color="#006930" />}
-          onChange={(date: Date) => console.log(new Date(date))}
+          onChange={(date: Date) => new Date(date)}
           calendarType={'ISO 8601'}
           defaultValue={[new Date(2022, 0, 1), new Date(2022, 0, 4)]}
         />
@@ -42,19 +64,16 @@ export const CalendarComponent = () => {
             <>
               <Heading>
                 <Text as="h2" colors="green50" size="2xl">
-                  Eventos Anteriores
+                  Ligas Anteriores
                 </Text>
               </Heading>
               {!viewButton &&
-                eventsOldMock?.map((events, key) => (
+                leagues?.map((league: any, key: any) => (
                   <CardEvents key={key}>
                     <div className="content">
                       <div className="line" />
-                      <Text colors="green900">{events.name}</Text>
+                      <Text colors="green900">{league.name}</Text>
                     </div>
-                    <Text as="span" className="data" colors="green900">
-                      {events.data}
-                    </Text>
                   </CardEvents>
                 ))}
             </>
@@ -68,15 +87,12 @@ export const CalendarComponent = () => {
                 </Text>
               </Heading>
 
-              {currentEvents?.map((events, key) => (
+              {leagues?.map((events: any, key: any) => (
                 <CardEvents key={key}>
                   <div className="content">
                     <div className="line" />
                     <Text colors="green900">{events.name}</Text>
                   </div>
-                  <Text as="span" className="data" colors="green900">
-                    {events.data}
-                  </Text>
                 </CardEvents>
               ))}
             </>

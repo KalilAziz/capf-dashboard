@@ -52,10 +52,9 @@ export const LoginProvider = ({ children }: LoginProviderProps) => {
         localStorage.setItem('@AuthFireBase:user', JSON.stringify(user))
       })
       .catch((error) => {
-        const errorCode = error.code
-        console.log(errorCode)
-        const errorMessage = error.message
-        console.log(errorMessage)
+        console.log(error)
+        // const errorCode = error.code
+        // const errorMessage = error.message
       })
   }
 
@@ -70,14 +69,11 @@ export const LoginProvider = ({ children }: LoginProviderProps) => {
         localStorage.setItem('@AuthFireBase:user', JSON.stringify(user))
       })
       .catch((error) => {
-        const errorCode = error.code
-        console.log(errorCode)
-        const errorMessage = error.message
-        console.log(errorMessage)
-        const email = error.customData.email
-        console.log(email)
-        const credential = GoogleAuthProvider.credentialFromError(error)
-        console.log(credential)
+        console.log(error)
+        // const errorCode = error.code(errorCode)
+        // const errorMessage = error.message
+        // const email = error.customData.email
+        // const credential = GoogleAuthProvider.credentialFromError(error)
       })
   }
 
@@ -95,17 +91,14 @@ export const LoginProvider = ({ children }: LoginProviderProps) => {
         localStorage.setItem('@AuthFireBase:user', JSON.stringify(user))
       })
       .catch((error) => {
+        console.log(error)
         // Handle Errors here.
-        const errorCode = error.code
-        console.log(errorCode)
-        const errorMessage = error.message
-        console.log(errorMessage)
+        //  const errorCode = error.code
+        // const errorMessage = error.message
         // The email of the user's account used.
-        const email = error.customData.email
-        console.log(email)
+        // const email = error.customData.email
         // The AuthCredential type that was used.
-        const credential = FacebookAuthProvider.credentialFromError(error)
-        console.log(credential)
+        // const credential = FacebookAuthProvider.credentialFromError(error)
       })
   }
 
@@ -113,15 +106,8 @@ export const LoginProvider = ({ children }: LoginProviderProps) => {
     localStorage.removeItem('@AuthFireBase:token')
     localStorage.removeItem('@AuthFireBase:user')
     setUser(null)
-    console.log('deslogado')
 
     return router.push('/')
-  }
-
-  const userCurrent = auth.currentUser
-  if (userCurrent !== null) {
-    const uid = userCurrent.uid
-    console.log(uid)
   }
 
   return (

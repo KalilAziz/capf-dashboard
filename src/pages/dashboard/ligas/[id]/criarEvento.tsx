@@ -41,16 +41,14 @@ const CreateEvent = () => {
   const [data, setData] = useState('')
   const [description, setDescription] = useState('')
   const [imageURL, setImageURL] = useState('')
-  const [chargeImage, setChargeImage] = useState(false)
-
-  console.log(data)
+  const [chargeImage, setChargeImage] = useState(false)(data)
 
   const router = useRouter()
 
   const { id } = router.query
 
   const handleCreateLeague = async () => {
-    console.log('sendo chamado')
+    ;('sendo chamado')
 
     const LeagueRef = doc(db, 'Leagues', String(id))
 
@@ -84,13 +82,12 @@ const CreateEvent = () => {
 
     await uploadBytesResumable(storageRef, file).then(() => {
       getDownloadURL(storageRef).then(function (url) {
-        console.log(url)
-        console.log('salvei url')
+        url('salvei url')
         setImageURL(url)
         setChargeImage(false)
       })
     })
-    return console.log('upload')
+    return 'upload'
   }
 
   return (

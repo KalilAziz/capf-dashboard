@@ -4,15 +4,18 @@ import { ThemeProvider } from 'next-themes'
 import 'react-calendar/dist/Calendar.css'
 import '../styles/calendar.css'
 import { LoginProvider } from '../context/UserProvider'
+import { LeagueProvider } from '../context/LeagueProvider'
 
 globalStyles()
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider enableColorScheme={false}>
-      <LoginProvider>
-        <Component {...pageProps} />
-      </LoginProvider>
+      <LeagueProvider>
+        <LoginProvider>
+          <Component {...pageProps} />
+        </LoginProvider>
+      </LeagueProvider>
     </ThemeProvider>
   )
 }

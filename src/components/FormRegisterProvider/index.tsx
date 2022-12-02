@@ -21,7 +21,7 @@ import Image from 'next/image'
 import ImageLogin from '../../assets/images/ImageLogin.svg'
 import logoCapf from '../../assets/images/logoCapf.svg'
 
-import { FormEvent, useContext, useState } from 'react'
+import { FormEvent, useContext, useEffect, useState } from 'react'
 
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -31,12 +31,17 @@ import { addDoc, collection, getFirestore } from 'firebase/firestore'
 import { firebaseApp } from '../../config/firebaseConfig'
 import { useRouter } from 'next/router'
 
-export const FormRegister = () => {
+interface UserProps {
+  displayName: string
+  email: string
+  photoURL: string
+}
+
+export const FormRegisterProvider = () => {
   const [counter, setCounter] = useState(1)
+  const [user, setUser] = useState<UserProps>()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
   const [student, setStudent] = useState(true)
   const [college, setCollege] = useState('Puc-GO')
   const [course, setCourse] = useState('Medicina')
@@ -45,6 +50,18 @@ export const FormRegister = () => {
   const [period, setPeriod] = useState('')
 
   const router = useRouter()
+
+  useEffect(() => {
+    const user = localStorage.getItem('@AuthFireBase:user')
+    // convertendo o user para objeto
+    // verificando se o userObject existe
+    if (user) {
+      const userObject = JSON.parse(user)
+      setUser(userObject as UserProps)
+      setName(userObject.displayName)
+      setEmail(userObject.email)
+    }
+  }, [])
 
   const { signOut } = useContext(LoginContext)
 
@@ -59,7 +76,7 @@ export const FormRegister = () => {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    console.log('submit')
+     ('submit')
   }
 
   const IncrementCounter = () => {
@@ -67,8 +84,6 @@ export const FormRegister = () => {
       counter,
       name,
       email,
-      password,
-      confirmPassword,
       student,
       college,
       course,
@@ -93,8 +108,6 @@ export const FormRegister = () => {
       counter,
       name,
       email,
-      password,
-      confirmPassword,
       student,
       college,
       course,
@@ -112,7 +125,8 @@ export const FormRegister = () => {
       cellphone,
       registration,
       period,
-      type: 'Aluno',
+      imageURL: user?.photoURL,
+      status: 'student',
       events: [],
     }
 
@@ -177,41 +191,10 @@ export const FormRegister = () => {
                     </Input.icon>
                     <Input.Input
                       value={email}
+                      disabled={true}
                       onChange={(event) => setEmail(event.target.value)}
                       type="email"
                       placeholder="Digite sua senha"
-                    />
-                  </Input.Root>
-                </label>
-
-                <label htmlFor="">
-                  <Text colors="green50">3: Aqui você digita sua senha:</Text>
-                  <Input.Root>
-                    <Input.icon>
-                      <BiLock />
-                    </Input.icon>
-                    <Input.Input
-                      type="password"
-                      value={password}
-                      onChange={(event) => setPassword(event.target.value)}
-                      placeholder="Digite sua senha"
-                    />
-                  </Input.Root>
-                </label>
-
-                <label htmlFor="">
-                  <Text colors="green50">4: Confirme sua senha</Text>
-                  <Input.Root>
-                    <Input.icon>
-                      <BiLock />
-                    </Input.icon>
-                    <Input.Input
-                      type="password"
-                      value={confirmPassword}
-                      onChange={(event) =>
-                        setConfirmPassword(event.target.value)
-                      }
-                      placeholder="Confirme sua senha"
                     />
                   </Input.Root>
                 </label>

@@ -32,13 +32,11 @@ const Events = () => {
         const league = docSnap.data().events
         setEvent(league[idEvent])
       } else {
-        console.log('No such document!')
+        ;('No such document!')
       }
     }
     getLeague()
-  }, [id, idEvent])
-
-  console.log(event)
+  }, [id, idEvent])(event)
   return (
     <Dashboard>
       <Heading css={{ textAlign: 'center' }}>

@@ -8,23 +8,22 @@ import {
 import { useTheme } from 'next-themes'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { FormRegister } from '../components/FormRegister'
-import { Looping } from '../components/Loop'
-import { firebaseApp } from '../config/firebaseConfig'
-import { darkTheme } from '../styles'
-import { Container } from '../styles/pages/register'
+import { FormRegister } from '../../components/FormRegister'
+import { FormRegisterProvider } from '../../components/FormRegisterProvider'
+import { Looping } from '../../components/Loop'
+import { firebaseApp } from '../../config/firebaseConfig'
+import { darkTheme } from '../../styles'
+import { Container } from '../../styles/pages/register'
 
 export default function Register() {
   const { theme } = useTheme()
   const [mounted, setMounted] = useState<boolean | undefined>(false)
   const [notUser, setNotUser] = useState<boolean | undefined>(false)
-  const router = useRouter()
-  console.log('mounted', mounted)
+  const router = useRouter()('mounted', mounted)
   const [users, setUsers] = useState<DocumentData[]>()
   const [emailUsers, setEmailUsers] = useState<string[]>()
 
-  const db = getFirestore(firebaseApp)
-  const useCollactionRef = collection(db, 'Users')
+  const { id } = router.query
 
   useEffect(() => {
     setMounted(true)
@@ -32,14 +31,12 @@ export default function Register() {
 
   useEffect(() => {
     const getUsers = async () => {
-      const data = await getDocs(useCollactionRef)
+      const data = await getDocs(collection(getFirestore(firebaseApp), 'Users'))
       const users = data.docs.map((doc) => doc.data())
       setUsers(users)
     }
     getUsers()
-  }, [useCollactionRef])
-
-  console.log(users)
+  }, [])(users)
 
   useEffect(() => {
     if (users) {
@@ -52,11 +49,11 @@ export default function Register() {
     const auth = getAuth()
     const user = auth.currentUser
     if (user !== null) {
-      const emailUser = String(user.email)
-      console.log(emailUser)
-      const createUsers = emailUsers?.includes(emailUser)
-
-      console.log('existe?', createUsers)
+      const emailUser = String(user.email)(emailUser)
+      const createUsers = emailUsers?.includes(emailUser)(
+        'existe?',
+        createUsers,
+      )
       setNotUser(createUsers)
       setMounted(createUsers)
     }
@@ -72,7 +69,9 @@ export default function Register() {
     <Container className={theme === 'dark' ? darkTheme : ''}>
       <Looping css={{ fontSize: '$6xl' }} />
     </Container>
+  ) : !notUser && id === 'googleAndFacebook' ? (
+    <FormRegisterProvider />
   ) : (
-    !notUser && <FormRegister />
+    <FormRegister />
   )
 }

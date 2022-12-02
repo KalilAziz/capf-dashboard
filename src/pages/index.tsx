@@ -30,9 +30,7 @@ export default function Home() {
   const [password, setPassword] = useState('')
   const router = useRouter()
   const { signInEmail, signInGoogle, signInFacebook, signedStatus } =
-    useContext(LoginContext)
-
-  console.log(signedStatus)
+    useContext(LoginContext)(signedStatus)
 
   const loginEmail = async (email: string, password: string) => {
     await signInEmail(email, password)
@@ -48,7 +46,7 @@ export default function Home() {
 
   useEffect(() => {
     if (signedStatus) {
-      router.push('/register')
+      router.push('/register/googleAndFacebook')
     }
   })
 
@@ -132,7 +130,8 @@ export default function Home() {
           </LoginProvider>
           <Register>
             <Text colors="green50">
-              Não tem uma conta? <Link href="/register">Cadastre-se</Link>
+              Não tem uma conta?
+              <Link href="/register/default">Cadastre-se</Link>
             </Text>
           </Register>
         </FormContent>

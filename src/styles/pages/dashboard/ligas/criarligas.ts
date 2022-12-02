@@ -33,6 +33,10 @@ export const Content = styled('div', {
     input: {
       fontSize: '$lg',
     },
+
+    button: {
+      justifyContent: 'flex-start',
+    },
   },
 
   textArea: {

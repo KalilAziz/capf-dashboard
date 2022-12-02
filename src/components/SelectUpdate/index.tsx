@@ -128,7 +128,8 @@ interface SelectComponentProps {
   label?: string
   options: string[][]
   defaultValue: string
-  idLeague: number
+  idLeague: string
+  collection: string
 }
 
 export const SelectUpdate = ({
@@ -136,20 +137,18 @@ export const SelectUpdate = ({
   options,
   defaultValue,
   idLeague,
+  collection,
 }: SelectComponentProps) => {
   const [value, setValue] = useState<string>(defaultValue)
 
   useEffect(() => {
     const updateLeague = async () => {
-      await updateDoc(
-        doc(getFirestore(firebaseApp), 'Leagues', String(idLeague)),
-        {
-          status: value,
-        },
-      )
+      await updateDoc(doc(getFirestore(firebaseApp), collection, idLeague), {
+        status: value,
+      })
     }
     updateLeague()
-  }, [value, idLeague])
+  }, [value, idLeague, collection])
 
   return (
     <Select.Root

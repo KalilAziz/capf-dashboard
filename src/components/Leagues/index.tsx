@@ -3,11 +3,12 @@ import useMediaQuery from '../../hooks/MediaQuery'
 import { Button } from '../Button'
 import { League } from '../League'
 import { Text } from '../Text'
-import { Container, Pagination } from './styles'
+import { Container, ImageNotEvents, Pagination } from './styles'
+import notEvent from '../../assets/images/notEvents.svg'
 
 interface LeaguesssProps {
   leagues: {
-    id: number
+    id: string
     name: string
     initials: string
     orientation: string
@@ -53,8 +54,11 @@ export const Leagues = ({ leagues }: LeaguesssProps) => {
       </Pagination>
     </>
   ) : (
-    <Text as="span" colors="green50">
-      <strong>Não há eventos cadastrados</strong>
-    </Text>
+    <>
+      <ImageNotEvents src={notEvent} alt="No Events" />
+      <Text as="h2" size="lg" colors="black">
+        Não há Ligas cadastrados
+      </Text>
+    </>
   )
 }

@@ -8,7 +8,7 @@ import Link from 'next/link'
 
 interface LeagueProps {
   league: {
-    id: number
+    id: string
     name: string
     initials: string
     orientation: string
@@ -63,7 +63,8 @@ export const League = ({ league }: LeagueProps) => {
             label="Status"
             options={optionsLeague}
             defaultValue={league.status}
-            idLeague={league.id}
+            idLeague={String(league.id)}
+            collection="Leagues"
           />
         </Button>
       </div>

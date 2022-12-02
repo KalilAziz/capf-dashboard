@@ -18,7 +18,10 @@ import {
   doc,
   getDocs,
   getFirestore,
+  onSnapshot,
+  query,
   setDoc,
+  where,
 } from 'firebase/firestore'
 import { firebaseApp } from '../../../config/firebaseConfig'
 import {
@@ -33,6 +36,7 @@ import { toast, ToastContainer } from 'react-toastify'
 import { AiOutlineCloudUpload } from 'react-icons/ai'
 import { Looping } from '../../../components/Loop'
 import { useRouter } from 'next/router'
+import { SelectStatus } from '../../../components/SelectStatus'
 
 const CreateLeague = () => {
   // Conect to firebase
@@ -45,10 +49,11 @@ const CreateLeague = () => {
   const [name, setName] = useState('')
   const [initials, setInitials] = useState('')
   const [description, setDescription] = useState('')
-  const [orientation, setOrientation] = useState('')
   const [imageURL, setImageURL] = useState('')
   const [chargeImage, setChargeImage] = useState(false)
   const [leagues, setLeagues] = useState<any>([])
+  const [options, setOptions] = useState<any[]>([])
+  const [option, setOption] = useState('')
 
   const valueNextLeague = leagues.length + 1
 
@@ -59,41 +64,35 @@ const CreateLeague = () => {
       const useCollactionRef = collection(getFirestore(firebaseApp), 'Leagues')
       const data = await getDocs(useCollactionRef)
       const Leagues = await data.docs.map((doc) => ({
-        id: doc.id,
         ...doc.data(),
       }))
       setLeagues(Leagues)
     }
     getLeagues()
   }, [])
-  /*
-  const handlaUpdate = async () => {
-    console.log('sendo chamado')
-    const washingtonRef = doc(db, 'Leagues', '1')
 
-    await updateDoc(washingtonRef, {
-      events: arrayUnion({
-        name: 'Evento Teste 2',
-        data: '28/10/2022',
-        Objective: 'Evento Teste 2',
-      }),
-    })
-    toast.success('Evento Criado', {
-      position: 'top-right',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'dark',
-    })
-  }
+  useEffect(() => {
+    const defaultOptions = [['all', 'Disponíveis']]
+    const getLeagues = async () => {
+      const useCollactionRef = query(
+        collection(getFirestore(firebaseApp), 'Users'),
+        where('status', '==', 'advisor'),
+      )
+      onSnapshot(useCollactionRef, (querySnapshot) => {
+        const option: any[] = []
+        option.push(...defaultOptions)
+        querySnapshot.forEach((doc) => {
+          option.push([doc.data().name, doc.data().name])
+        })
+        setOptions(option)
+      })
+    }
 
-  */
+    getLeagues()
+  }, [])
 
   const handleCreateLeague = async () => {
-    if (!name || !initials || !description || !orientation) {
+    if (!name || !initials || !description || option === 'all') {
       toast.warn('Preencha os campos', {
         position: 'top-right',
         autoClose: 5000,
@@ -107,31 +106,20 @@ const CreateLeague = () => {
       return
     }
 
-    /*
-    await updateDoc(LeagueRef, {
-      Leagues: arrayUnion(
-        createLeague(initials, name, description, orientation, imageURL),
-      ),
-    })
-    */
-
     await setDoc(doc(db, 'Leagues', `${valueNextLeague}`), {
       id: Number(valueNextLeague),
       initials,
       name,
       description,
-      orientation,
+      orientation: option,
       imageURL,
       events: [],
       status: 'active',
     })
 
-    console.log('salvei no firebase')
-
     setInitials('')
     setName('')
     setDescription('')
-    setOrientation('')
     setImageURL('')
 
     toast.success('Liga criada com sucesso', {
@@ -156,13 +144,11 @@ const CreateLeague = () => {
 
     await uploadBytesResumable(storageRef, file).then(() => {
       getDownloadURL(storageRef).then(function (url) {
-        console.log(url)
-        console.log('salvei url')
         setImageURL(url)
         setChargeImage(false)
       })
     })
-    return console.log('upload')
+    return 'upload'
   }
 
   return (
@@ -211,11 +197,11 @@ const CreateLeague = () => {
                 <Input.icon>
                   <FaUsers />
                 </Input.icon>
-                <Input.Input
-                  type="text"
-                  value={orientation}
-                  onChange={(e) => setOrientation(e.target.value)}
-                  placeholder="Nome do Orientador"
+                <SelectStatus
+                  label="Orientadores Disponíveis"
+                  options={options}
+                  setOption={setOption}
+                  defaultValue="all"
                 />
               </Input.Root>
             </label>
