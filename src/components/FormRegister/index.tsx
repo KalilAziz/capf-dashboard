@@ -58,7 +58,7 @@ export const FormRegister = () => {
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()('submit')
+    event.preventDefault()
   }
 
   const IncrementCounter = () => {

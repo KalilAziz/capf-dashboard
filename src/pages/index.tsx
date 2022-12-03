@@ -30,7 +30,7 @@ export default function Home() {
   const [password, setPassword] = useState('')
   const router = useRouter()
   const { signInEmail, signInGoogle, signInFacebook, signedStatus } =
-    useContext(LoginContext)(signedStatus)
+    useContext(LoginContext)
 
   const loginEmail = async (email: string, password: string) => {
     await signInEmail(email, password)

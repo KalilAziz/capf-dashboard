@@ -2,7 +2,6 @@ import { Dashboard } from '../../components/Dashboard'
 import { Heading } from '../../components/Heading'
 import { TableUserInfo } from '../../components/TableUser'
 import { Text } from '../../components/Text'
-// import {} from '../../styles/pages/usuarios'
 
 const User = () => {
   return (

@@ -19,7 +19,7 @@ export default function Register() {
   const { theme } = useTheme()
   const [mounted, setMounted] = useState<boolean | undefined>(false)
   const [notUser, setNotUser] = useState<boolean | undefined>(false)
-  const router = useRouter()('mounted', mounted)
+  const router = useRouter()
   const [users, setUsers] = useState<DocumentData[]>()
   const [emailUsers, setEmailUsers] = useState<string[]>()
 
@@ -36,7 +36,7 @@ export default function Register() {
       setUsers(users)
     }
     getUsers()
-  }, [])(users)
+  }, [])
 
   useEffect(() => {
     if (users) {
@@ -49,11 +49,8 @@ export default function Register() {
     const auth = getAuth()
     const user = auth.currentUser
     if (user !== null) {
-      const emailUser = String(user.email)(emailUser)
-      const createUsers = emailUsers?.includes(emailUser)(
-        'existe?',
-        createUsers,
-      )
+      const emailUser = String(user.email)
+      const createUsers = emailUsers?.includes(emailUser)
       setNotUser(createUsers)
       setMounted(createUsers)
     }

@@ -32,7 +32,7 @@ const Events = () => {
         const league = docSnap.data().events
         setEvent(league[idEvent])
       } else {
-        ;('No such document!')
+        console.log('No such document!')
       }
     }
     getLeague()
