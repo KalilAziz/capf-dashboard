@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import { FaUsers } from 'react-icons/fa'
 import { Box } from '../../../components/Box'
 import { Button } from '../../../components/Button'
@@ -13,16 +13,6 @@ import {
   Content,
 } from '../../../styles/pages/dashboard/ligas/criarLigas'
 
-import {
-  collection,
-  doc,
-  getDocs,
-  getFirestore,
-  onSnapshot,
-  query,
-  setDoc,
-  where,
-} from 'firebase/firestore'
 import { firebaseApp } from '../../../config/firebaseConfig'
 import {
   getStorage,
@@ -37,10 +27,13 @@ import { AiOutlineCloudUpload } from 'react-icons/ai'
 import { Looping } from '../../../components/Loop'
 import { useRouter } from 'next/router'
 import { SelectStatus } from '../../../components/SelectStatus'
+import { LeagueContext } from '../../../context/LeagueProvider/context'
+import { createLeague } from '../../../context/LeagueProvider/action'
+import { UsersContext } from '../../../context/UsersProvider/context'
 
 const CreateLeague = () => {
   // Conect to firebase
-  const db = getFirestore(firebaseApp)
+
   // FireStorage
   const storage = getStorage(firebaseApp)
 
@@ -51,45 +44,15 @@ const CreateLeague = () => {
   const [description, setDescription] = useState('')
   const [imageURL, setImageURL] = useState('')
   const [chargeImage, setChargeImage] = useState(false)
-  const [leagues, setLeagues] = useState<any>([])
-  const [options, setOptions] = useState<any[]>([])
   const [option, setOption] = useState('')
 
-  const valueNextLeague = leagues.length + 1
+  const { state, dispatch } = useContext(LeagueContext)
+  // desestruturar o state do context
+  const {
+    state: { optionsUsersAdvisor },
+  } = useContext(UsersContext)
 
   const router = useRouter()
-
-  useEffect(() => {
-    const getLeagues = async () => {
-      const useCollactionRef = collection(getFirestore(firebaseApp), 'Leagues')
-      const data = await getDocs(useCollactionRef)
-      const Leagues = await data.docs.map((doc) => ({
-        ...doc.data(),
-      }))
-      setLeagues(Leagues)
-    }
-    getLeagues()
-  }, [])
-
-  useEffect(() => {
-    const defaultOptions = [['all', 'Disponíveis']]
-    const getLeagues = async () => {
-      const useCollactionRef = query(
-        collection(getFirestore(firebaseApp), 'Users'),
-        where('status', '==', 'advisor'),
-      )
-      onSnapshot(useCollactionRef, (querySnapshot) => {
-        const option: any[] = []
-        option.push(...defaultOptions)
-        querySnapshot.forEach((doc) => {
-          option.push([doc.data().name, doc.data().name])
-        })
-        setOptions(option)
-      })
-    }
-
-    getLeagues()
-  }, [])
 
   const handleCreateLeague = async () => {
     if (!name || !initials || !description || option === 'all') {
@@ -106,8 +69,8 @@ const CreateLeague = () => {
       return
     }
 
-    await setDoc(doc(db, 'Leagues', `${valueNextLeague}`), {
-      id: Number(valueNextLeague),
+    const data = {
+      id: state.nextIndiceLeague,
       initials,
       name,
       description,
@@ -115,7 +78,9 @@ const CreateLeague = () => {
       imageURL,
       events: [],
       status: 'active',
-    })
+    }
+
+    createLeague(dispatch, data)
 
     setInitials('')
     setName('')
@@ -199,7 +164,7 @@ const CreateLeague = () => {
                 </Input.icon>
                 <SelectStatus
                   label="Orientadores Disponíveis"
-                  options={options}
+                  options={optionsUsersAdvisor}
                   setOption={setOption}
                   defaultValue="all"
                 />

@@ -1,13 +1,5 @@
-import {
-  collection,
-  getFirestore,
-  onSnapshot,
-  orderBy,
-  query,
-} from 'firebase/firestore'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
-import { firebaseApp } from '../../config/firebaseConfig'
+import { useContext } from 'react'
 import { SelectUpdate } from '../SelectUpdate'
 import { Text } from '../Text'
 import avatar from '../../assets/images/Avatar.svg'
@@ -20,20 +12,7 @@ import {
   TableUser,
   Users,
 } from './styles'
-
-interface UsersProps {
-  id: string
-  name: string
-  email: string
-  cellphone: string
-  college: string
-  imageURL: string
-  course: string
-  period: string
-  registration: string
-  student: boolean
-  status: string
-}
+import { UsersContext } from '../../context/UsersProvider/context'
 
 const optionsLeague = [
   ['student', 'Aluno'],
@@ -44,26 +23,7 @@ const optionsLeague = [
 ]
 
 export const TableUserInfo = () => {
-  const [UsersBd, setUsersBd] = useState<UsersProps[]>([])
-
-  useEffect(() => {
-    const getLeagues = async () => {
-      const useCollactionRef = query(
-        collection(getFirestore(firebaseApp), 'Users'),
-        orderBy('name', 'asc'),
-      )
-      onSnapshot(useCollactionRef, (querySnapshot) => {
-        const Users: UsersProps[] = []
-        querySnapshot.forEach((doc) => {
-          doc.data()
-          Users.push({ ...doc.data(), id: doc.id } as UsersProps)
-        })
-        setUsersBd(Users.slice(0).reverse())
-      })
-    }
-
-    getLeagues()
-  }, [])
+  const { state } = useContext(UsersContext)
 
   return (
     <Container>
@@ -94,7 +54,7 @@ export const TableUserInfo = () => {
           </Text>
         </Status>
       </TableUser>
-      {UsersBd.map((user) => (
+      {state.users.map((user) => (
         <TableUser key={user.id}>
           <Users>
             <Image

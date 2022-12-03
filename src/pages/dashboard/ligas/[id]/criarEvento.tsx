@@ -41,14 +41,14 @@ const CreateEvent = () => {
   const [data, setData] = useState('')
   const [description, setDescription] = useState('')
   const [imageURL, setImageURL] = useState('')
-  const [chargeImage, setChargeImage] = useState(false)(data)
+  const [chargeImage, setChargeImage] = useState(false)
 
   const router = useRouter()
 
   const { id } = router.query
 
   const handleCreateLeague = async () => {
-    ;('sendo chamado')
+    console.log('sendo chamado')
 
     const LeagueRef = doc(db, 'Leagues', String(id))
 
@@ -82,7 +82,6 @@ const CreateEvent = () => {
 
     await uploadBytesResumable(storageRef, file).then(() => {
       getDownloadURL(storageRef).then(function (url) {
-        url('salvei url')
         setImageURL(url)
         setChargeImage(false)
       })
@@ -189,7 +188,7 @@ const CreateEvent = () => {
               {chargeImage ? (
                 <Looping />
               ) : (
-                <Text colors="green500">Criar Liga</Text>
+                <Text colors="green500">Criar Evento</Text>
               )}
             </Button>
           </Content>

@@ -2,10 +2,10 @@ import { useContext } from 'react'
 import { Dashboard } from '../../components/Dashboard'
 import { Heading } from '../../components/Heading'
 import { Text } from '../../components/Text'
-import { LeagueContext } from '../../context/LeagueProvider/context'
+import { UsersContext } from '../../context/UsersProvider/context'
 
 const Certificate = () => {
-  const { state } = useContext(LeagueContext)
+  const { state } = useContext(UsersContext)
 
   console.log(state)
 

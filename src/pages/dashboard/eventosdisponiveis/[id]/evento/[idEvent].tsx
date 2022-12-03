@@ -36,7 +36,7 @@ const Events = () => {
       }
     }
     getLeague()
-  }, [id, idEvent])(event)
+  }, [id, idEvent])
   return (
     <Dashboard>
       <Heading css={{ textAlign: 'center' }}>

@@ -1,7 +1,10 @@
 import * as types from './types'
 
-export const createLeague = (dispath: any) =>
-  dispath({ type: types.CREATE_LEAGUE })
+export const createLeague = (dispath: any, data: any) =>
+  dispath({ type: types.CREATE_LEAGUE, payload: data })
+
+export const uploadImage = (dispath: any, data: any) =>
+  dispath({ type: types.UPLOAD_IMAGE, payload: data })
 
 export const setLeague = (dispath: any, data: any) =>
   dispath({ type: types.SET_LEAGUE, payload: data })
