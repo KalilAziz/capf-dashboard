@@ -16,24 +16,24 @@ const MyEvents = () => {
   const [searchText, setSearchText] = useState('')
   const { state } = useContext(LeagueContext)
 
+  // unir todos os arrays de state.events
+  const events = state.events.reduce((acc, curr) => [...acc, ...curr], [])
+  console.log(events)
+
   // filter searchText
-  const filteredTextEvents = state.events.map((event: any) => {
-    const eventsFilter = event.filter((event: any) => {
-      return event.name.toLowerCase().includes(searchText.toLowerCase())
-    })
-    return eventsFilter
+  const filteredTextEvents = events.filter((event: any) => {
+    return event.name.toLowerCase().includes(searchText.toLowerCase())
   })
 
   // filter events
   const filteredEvents = state.eventsDisponibles.map((event: any) => {
-    if (option === 'all') {
-      return console.log('all')
-    } else {
+    if (option !== 'all') {
       const eventsFilter = event.filter((event: any) => {
         return event.nameLeague === option
       })
       return eventsFilter
     }
+    return event
   })
 
   // retirar arrays vazias
@@ -85,7 +85,7 @@ const MyEvents = () => {
         {option !== 'all' ? (
           <Events events={eventsFil[0]} option={option} />
         ) : (
-          <Events events={filteredTextEvents[0]} option={option} />
+          <Events events={filteredTextEvents} option={option} />
         )}
       </Dashboard>
     </>

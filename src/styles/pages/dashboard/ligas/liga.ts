@@ -42,7 +42,6 @@ export const Search = styled(Box, {
   '.addEvents': {
     gridArea: 'addEvents',
     width: 'calc(100% - $6)',
-    border: '1px solid red',
     fontWeight: 'normal',
     height: '$10',
     padding: '0 $3',
