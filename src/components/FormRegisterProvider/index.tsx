@@ -63,7 +63,7 @@ export const FormRegisterProvider = () => {
     }
   }, [])
 
-  const { signOut } = useContext(LoginContext)
+  const { signOutUsers } = useContext(LoginContext)
 
   // Conect to firebase
   const db = getFirestore(firebaseApp)
@@ -397,7 +397,7 @@ export const FormRegisterProvider = () => {
           <Text colors="green50">Etapa {counter} de 3</Text>
         </FormContent>
         <ButtonCapf href="/">
-          <Button onClick={() => signOut()}>
+          <Button onClick={() => signOutUsers()}>
             <BiArrowBack className="arrow" />
             <AiFillHome />
           </Button>

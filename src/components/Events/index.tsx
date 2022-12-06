@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import useMediaQuery from '../../hooks/MediaQuery'
 import { Button } from '../Button'
 import { Event } from '../Event'
@@ -8,6 +8,7 @@ import notEvent from '../../assets/images/notEvents.svg'
 import Link from 'next/link'
 import { BsInfoLg } from 'react-icons/bs'
 import { useRouter } from 'next/router'
+import { LeagueContext } from '../../context/LeagueProvider/context'
 
 interface EventsProps {
   events:
@@ -16,13 +17,14 @@ interface EventsProps {
         data: string
         name: string
         description: string
+        idLeague: string
       }[]
     | undefined
 
-  idLeague: string
+  option?: string
 }
 
-export const Events = ({ events, idLeague }: EventsProps) => {
+export const Events = ({ events, option }: EventsProps) => {
   const viewButton = useMediaQuery('(min-width: 640px)')
   const [currentPage, setCurrentPage] = useState(1)
   const [eventsPerPage] = useState(viewButton ? 4 : 1)
@@ -36,21 +38,37 @@ export const Events = ({ events, idLeague }: EventsProps) => {
   const router = useRouter()
   const dirRouter = router.pathname === '/dashboard/eventosdisponiveis'
 
+  const { state } = useContext(LeagueContext)
+  const leagueOption = state.league.filter((league: any) => {
+    return league.name === option
+  })
+
+  const leagueId = leagueOption.map((league: any) => {
+    return league.id
+  })
+
+  const leagueIdString = leagueId.toString()
+
   return events?.length ? (
     <>
       <Container>
-        {currentEvents?.map((event, key) => (
-          <Event key={key} event={event} idLeague={idLeague} />
-        ))}
+        {currentEvents
+          ?.slice(0)
+          .reverse()
+          .map((event, key) => {
+            return <Event key={key} event={event} />
+          })}
       </Container>
-      <InfoLeague dirRouter={dirRouter}>
-        <Link href={`eventosdisponiveis/${idLeague}`}>
-          <BsInfoLg />
-          <Text size="sm" colors="black">
-            informações sobre a liga
-          </Text>
-        </Link>
-      </InfoLeague>
+      {option !== 'all' && (
+        <InfoLeague dirRouter={dirRouter}>
+          <Link href={`eventosdisponiveis/${leagueIdString}`}>
+            <BsInfoLg />
+            <Text size="sm" colors="black">
+              informações sobre a liga
+            </Text>
+          </Link>
+        </InfoLeague>
+      )}
       <Pagination className="pagination" style={{ display: 'flex' }}>
         <Button
           onClick={() => paginate(currentPage - 1)}

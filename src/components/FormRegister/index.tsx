@@ -46,7 +46,7 @@ export const FormRegister = () => {
 
   const router = useRouter()
 
-  const { signOut } = useContext(LoginContext)
+  const { signOutUsers, createInEmail } = useContext(LoginContext)
 
   // Conect to firebase
   const db = getFirestore(firebaseApp)
@@ -114,6 +114,8 @@ export const FormRegister = () => {
       type: 'Aluno',
       events: [],
     }
+
+    createInEmail(email, password)
 
     if (salve && counter <= 3) {
       addDoc(useCollactionRef, dataUser)
@@ -414,7 +416,7 @@ export const FormRegister = () => {
           <Text colors="green50">Etapa {counter} de 3</Text>
         </FormContent>
         <ButtonCapf href="/">
-          <Button onClick={() => signOut()}>
+          <Button onClick={() => signOutUsers()}>
             <BiArrowBack className="arrow" />
             <AiFillHome />
           </Button>

@@ -1,4 +1,4 @@
-import { styled } from '../../../../../'
+import { styled } from '../../../../..'
 import { Box } from '../../../../../../components/Box'
 
 export const Container = styled(Box, {

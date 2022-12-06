@@ -6,6 +6,7 @@ const nextConfig = {
     domains: [
       'avatars.githubusercontent.com',
       'firebasestorage.googleapis.com',
+      'res.cloudinary.com',
       'lh3.googleusercontent.com',
       'lh4.googleusercontent.com',
       'lh5.googleusercontent.com',

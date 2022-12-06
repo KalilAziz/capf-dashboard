@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { useRouter } from 'next/router'
 
 import { Box } from '../../../../components/Box'
@@ -29,6 +29,7 @@ import { toast, ToastContainer } from 'react-toastify'
 import useMediaQuery from '../../../../hooks/MediaQuery'
 import { AiOutlineCloudUpload } from 'react-icons/ai'
 import { FaUsers } from 'react-icons/fa'
+import { LeagueContext } from '../../../../context/LeagueProvider/context'
 
 const CreateEvent = () => {
   // Conect to firebase
@@ -43,14 +44,23 @@ const CreateEvent = () => {
   const [imageURL, setImageURL] = useState('')
   const [chargeImage, setChargeImage] = useState(false)
 
+  const { state } = useContext(LeagueContext)
+
   const router = useRouter()
 
   const { id } = router.query
+  const idLeague = Number(id)
+
+  const League = state.league.filter((league) => {
+    return Number(league.id) === idLeague
+  })
+
+  const league = League[0]
+
+  console.log(league.name)
 
   const handleCreateLeague = async () => {
-    console.log('sendo chamado')
-
-    const LeagueRef = doc(db, 'Leagues', String(id))
+    const LeagueRef = doc(db, 'Leagues', String(idLeague))
 
     await updateDoc(LeagueRef, {
       events: arrayUnion({
@@ -58,6 +68,9 @@ const CreateEvent = () => {
         data,
         imageURL,
         description,
+        idLeague: String(idLeague),
+        nameLeague: league.name,
+        urlCertificate: '',
       }),
     })
     toast.success('Evento Criado', {

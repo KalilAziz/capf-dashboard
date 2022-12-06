@@ -1,11 +1,13 @@
-import { useEffect, useState, ReactNode } from 'react'
+import { useState, ReactNode } from 'react'
 import {
   signInWithEmailAndPassword,
-  // createUserWithEmailAndPassword,
   GoogleAuthProvider,
   FacebookAuthProvider,
   getAuth,
   signInWithPopup,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
 } from 'firebase/auth'
 
 import { LoginContext } from './context'
@@ -18,29 +20,10 @@ interface LoginProviderProps {
   children: ReactNode
 }
 
-interface UserInfo {
-  readonly displayName: string | null
-  readonly email: string | null
-  readonly phoneNumber: string | null
-  readonly photoURL: string | null
-  readonly providerId: string
-  readonly uid: string
-}
-
 export const LoginProvider = ({ children }: LoginProviderProps) => {
-  const [user, setUser] = useState<UserInfo | null | undefined>()
+  const [signedStatus, setSignedStatus] = useState(false)
 
   const router = useRouter()
-
-  useEffect(() => {
-    const loadStorageAuth = () => {
-      // const token = localStorage.getItem('@AuthFireBase:token')
-      const user = localStorage.getItem('@AuthFireBase:user')
-      setUser(user ? JSON.parse(user) : null)
-    }
-
-    loadStorageAuth()
-  }, [])
 
   const auth = getAuth(firebaseApp)
 
@@ -48,7 +31,21 @@ export const LoginProvider = ({ children }: LoginProviderProps) => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user
-        setUser(user)
+
+        localStorage.setItem('@AuthFireBase:user', JSON.stringify(user))
+      })
+      .catch((error) => {
+        console.log(error)
+        // const errorCode = error.code
+        // const errorMessage = error.message
+      })
+  }
+
+  const createInEmail = (email: string, password: string) => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user
+
         localStorage.setItem('@AuthFireBase:user', JSON.stringify(user))
       })
       .catch((error) => {
@@ -64,7 +61,7 @@ export const LoginProvider = ({ children }: LoginProviderProps) => {
         const credential = GoogleAuthProvider.credentialFromResult(result)
         const token = credential?.accessToken
         const user = result.user
-        setUser(user)
+
         localStorage.setItem('@AuthFireBase:token', String(token))
         localStorage.setItem('@AuthFireBase:user', JSON.stringify(user))
       })
@@ -86,7 +83,7 @@ export const LoginProvider = ({ children }: LoginProviderProps) => {
         // This gives you a Facebook Access Token. You can use it to access the Facebook API.
         const credential = FacebookAuthProvider.credentialFromResult(result)
         const accessToken = credential?.accessToken
-        setUser(user)
+
         localStorage.setItem('@AuthFireBase:token', String(accessToken))
         localStorage.setItem('@AuthFireBase:user', JSON.stringify(user))
       })
@@ -102,23 +99,43 @@ export const LoginProvider = ({ children }: LoginProviderProps) => {
       })
   }
 
-  const signOut = () => {
-    localStorage.removeItem('@AuthFireBase:token')
-    localStorage.removeItem('@AuthFireBase:user')
-    setUser(null)
-
-    return router.push('/')
+  const signOutUsers = () => {
+    const auth = getAuth()
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful.
+        console.log('Sign-out successful.')
+        localStorage.removeItem('@AuthFireBase:token')
+        localStorage.removeItem('@AuthFireBase:user')
+        setSignedStatus(false)
+        return router.push('/')
+      })
+      .catch((error) => {
+        console.log('error ao desconectar usuário', error)
+        // An error happened.
+      })
   }
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log('Usuário conectado')
+      setSignedStatus(true)
+    } else {
+      console.log('Usuário desconectado')
+      setSignedStatus(false)
+      console.log(user, signedStatus)
+    }
+  })
 
   return (
     <LoginContext.Provider
       value={{
         signInEmail,
+        createInEmail,
         signInGoogle,
         signInFacebook,
-        signedStatus: user?.uid !== undefined,
-        user,
-        signOut,
+        signedStatus,
+        signOutUsers,
       }}
     >
       {children}

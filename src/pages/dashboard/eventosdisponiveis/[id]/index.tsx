@@ -31,6 +31,7 @@ const Liga = () => {
     data: string
     name: string
     description: string
+    idLeague: string
   }
 
   const [league, setLeague] = useState<League>()
@@ -108,7 +109,7 @@ const Liga = () => {
           Eventos da Liga
         </Text>
       </Heading>
-      <Events events={events} idLeague={id} />
+      <Events events={events} />
     </Dashboard>
   )
 }

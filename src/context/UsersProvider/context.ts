@@ -9,6 +9,7 @@ export interface UsersProps {
   imageURL: string
   course: string
   period: string
+  events: string[]
   registration: string
   student: boolean
   status: string
@@ -19,6 +20,10 @@ export const UsersContext = createContext({
     users: [] as UsersProps[],
     usersAdvisor: [] as UsersProps[],
     optionsUsersAdvisor: [],
+    userConected: {} as UsersProps,
+    eventsSubscribe: [],
+    eventsSubscribeActiveUser: [],
+    eventsSubscribeInactiveUser: [],
   },
   dispatch: (action: any) => action,
 })

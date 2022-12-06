@@ -10,6 +10,7 @@ import { ReactNode, useEffect, useReducer } from 'react'
 import { firebaseApp } from '../../config/firebaseConfig'
 import {
   setEvents,
+  setEventsDisponibles,
   setLeague,
   setLeagueActive,
   setLeagueInactive,
@@ -42,7 +43,7 @@ export const LeagueProvider = ({ children }: LeagueProviderProps) => {
         })
 
         // Todas as ligas
-        setLeague(dispatch, leagues.slice(0).reverse())
+        setLeague(dispatch, leagues)
 
         // Filtrar ligas por status Active
         const leaguesActive = leagues.filter(
@@ -64,13 +65,39 @@ export const LeagueProvider = ({ children }: LeagueProviderProps) => {
         // events disponíveis
         const events: any[] = []
         leaguesActive.forEach((league) => {
-          events.push([
-            ...league.events,
-            { idLeague: league.id, nameLeague: league.name },
-          ])
+          const eventsWithIndex = league.events.map((event, index) => {
+            return { ...event, id: String(index) }
+          })
+          events.push(eventsWithIndex)
         })
 
         setEvents(dispatch, events)
+
+        // eventos disponíveis com data maior que data atual
+
+        const eventsDisponibles = events.map((event) => {
+          const eventsVirifyData = event.map((event: any) => {
+            const dateEvents = event.data.replace(/-/g, '/')
+            const date = new Date(dateEvents)
+            const dateNow = new Date()
+            // retorna array com data maior que data atual
+            if (date > dateNow) {
+              return event
+            }
+            return null
+          })
+
+          // retirar array vazio
+          const eventsDisponibles = eventsVirifyData.filter(
+            (event: any) => event !== null,
+          )
+
+          const eventsAfter = eventsDisponibles
+
+          return [...eventsAfter]
+        })
+
+        setEventsDisponibles(dispatch, eventsDisponibles)
 
         // options events disponíveis
         const optionsEvents: any[] = [['all', 'Todos']]

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { BiSearchAlt2 } from 'react-icons/bi'
 import { Button } from '../../../../components/Button'
@@ -18,6 +18,7 @@ import { MdQrCodeScanner } from 'react-icons/md'
 
 import { useRouter } from 'next/router'
 import { Events } from '../../../../components/Events'
+import { LeagueContext } from '../../../../context/LeagueProvider/context'
 
 const Liga = () => {
   interface League {
@@ -46,6 +47,19 @@ const Liga = () => {
 
   const id = String(query.id)
 
+  const { state } = useContext(LeagueContext)
+
+  const filteredEvents = state.events.map((event: any) => {
+    const eventsFilter = event.filter((event: any) => {
+      return event.idLeague === id
+    })
+    return eventsFilter
+  })
+
+  const events = filteredEvents[0]?.map((event: Event, index: number) => {
+    return { ...event, id: index }
+  })
+
   useEffect(() => {
     const getLeague = async () => {
       const docRef = doc(getFirestore(firebaseApp), 'Leagues', String(id))
@@ -58,10 +72,6 @@ const Liga = () => {
     }
     getLeague()
   }, [id])
-
-  const events = league?.events.map((event: Event, index: number) => {
-    return { ...event, id: index }
-  })
 
   return (
     <Dashboard>
@@ -126,7 +136,7 @@ const Liga = () => {
           Eventos da Liga
         </Text>
       </Heading>
-      <Events events={events} idLeague={id} />
+      <Events events={events} />
     </Dashboard>
   )
 }

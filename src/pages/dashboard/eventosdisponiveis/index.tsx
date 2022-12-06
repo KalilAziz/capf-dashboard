@@ -16,42 +16,33 @@ const MyEvents = () => {
   const [searchText, setSearchText] = useState('')
   const { state } = useContext(LeagueContext)
 
+  // filter searchText
+  const filteredTextEvents = state.events.map((event: any) => {
+    const eventsFilter = event.filter((event: any) => {
+      return event.name.toLowerCase().includes(searchText.toLowerCase())
+    })
+    return eventsFilter
+  })
+
   // filter events
-  const filteredEvents = state.events.filter((event: any) => {
+  const filteredEvents = state.eventsDisponibles.map((event: any) => {
     if (option === 'all') {
-      return event
+      return console.log('all')
     } else {
-      return event.slice(-1)[0].nameLeague === option
+      const eventsFilter = event.filter((event: any) => {
+        return event.nameLeague === option
+      })
+      return eventsFilter
     }
   })
 
-  // filtrar ultimo indice do array - idLeague
-  const indiceIdLeague = filteredEvents.map((event: any) => {
-    return event.slice(-1)[0]
+  // retirar arrays vazias
+  const eventsFil = filteredEvents.filter((event: any) => {
+    if (event !== undefined) {
+      return event.length > 0
+    }
+    return []
   })
-
-  // retirar o ultimo indice do array - idLeague
-  const eventsFiltered = filteredEvents.map((event: any) => {
-    return event.slice(0, -1)
-  })
-
-  // colocar indice em cada objeto do array - Pagination
-  const eventsFilteredWithIndex = eventsFiltered.map((event: any) => {
-    return event.map((item: any, id: number) => {
-      return { ...item, id }
-    })
-  })
-
-  // retirar array dentro de array - Reorganizar array
-  const eventsFilteredWithIndexAndFlat = eventsFilteredWithIndex.flat()
-
-  // filtrar searchText - Pesquisar por nome do evento
-  const filteredEventsWithIndexAndFlat = eventsFilteredWithIndexAndFlat.filter(
-    (event: any) => {
-      return event.name.toLowerCase().includes(searchText.toLowerCase())
-    },
-  )
-  console.log(filteredEventsWithIndexAndFlat)
 
   return (
     <>
@@ -91,16 +82,10 @@ const MyEvents = () => {
           </div>
         </Search>
         <CalendarComponent />
-        {searchText === '' ? (
-          <Events
-            events={eventsFilteredWithIndexAndFlat}
-            idLeague={indiceIdLeague[0]?.idLeague}
-          />
+        {option !== 'all' ? (
+          <Events events={eventsFil[0]} option={option} />
         ) : (
-          <Events
-            events={filteredEventsWithIndexAndFlat}
-            idLeague={indiceIdLeague[0]?.idLeague}
-          />
+          <Events events={filteredTextEvents[0]} option={option} />
         )}
       </Dashboard>
     </>

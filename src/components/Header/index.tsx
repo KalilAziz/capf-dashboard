@@ -308,7 +308,7 @@ const HeaderContainer = ({ children }: HeaderContainerProps) => {
 
   const [mounted, setMounted] = useState(false)
 
-  const { signOut } = useContext(LoginContext)
+  const { signOutUsers } = useContext(LoginContext)
 
   useEffect(() => {
     setMounted(true)
@@ -347,7 +347,7 @@ const HeaderContainer = ({ children }: HeaderContainerProps) => {
             </Button>
           )}
           <Link href="">
-            <Button onClick={() => signOut()}>
+            <Button onClick={() => signOutUsers()}>
               <FiLogOut style={{ transform: 'rotate(180deg)' }} />
               <Text colors="white">Logout</Text>
             </Button>

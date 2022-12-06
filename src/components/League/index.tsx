@@ -50,8 +50,12 @@ export const League = ({ league }: LeagueProps) => {
       </div>
 
       <div className="buttons">
-        <Link href={`/dashboard/ligas/${league.id}`}>
-          <Button>
+        <Link
+          href={
+            league.status === 'inactive' ? '' : `/dashboard/ligas/${league.id}`
+          }
+        >
+          <Button disabled={league.status === 'inactive'}>
             <Text as="span" colors="green500">
               Saiba Mais
             </Text>

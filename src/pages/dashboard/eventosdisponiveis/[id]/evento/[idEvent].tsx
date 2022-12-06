@@ -1,42 +1,53 @@
-import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useContext } from 'react'
+import { Button } from '../../../../../components/Button'
 import { Dashboard } from '../../../../../components/Dashboard'
 import { Heading } from '../../../../../components/Heading'
 import { Text } from '../../../../../components/Text'
-import { firebaseApp } from '../../../../../config/firebaseConfig'
-import { Container } from '../../../../../styles/pages/dashboard/ligas/id/Evento/idEvent'
+
+import { LeagueContext } from '../../../../../context/LeagueProvider/context'
+import { setEventsSubscribe } from '../../../../../context/UsersProvider/action'
+import { UsersContext } from '../../../../../context/UsersProvider/context'
+import {
+  Container,
+  Buttons,
+} from '../../../../../styles/pages/dashboard/eventosdisponiveis/idEvent'
+
+interface Event {
+  id: number
+  data: string
+  name: string
+  description: string
+  imageURL: string
+  idLeague: string
+}
 
 const Events = () => {
   const router = useRouter()
 
-  interface EventProps {
-    name: string
-    data: string
-    Objective: string
-    description: string
-    imageURL: string | undefined
+  const queryRouter = router.query
+  const id = String(queryRouter.id)
+  const idEvent = String(queryRouter.idEvent)
+  const { state } = useContext(LeagueContext)
+
+  const { dispatch } = useContext(UsersContext)
+
+  // juntat todas as arryas dentro do array
+  const events = state.eventsDisponibles.flat()
+
+  const eventCompatible = events.filter((event: Event) => {
+    return String(event.id) === idEvent && String(event.idLeague) === id
+  })
+
+  const event = eventCompatible[0] as Event
+
+  const subscribeEvents = async () => {
+    setEventsSubscribe(dispatch, event)
+    return console.log('Evento inscrito')
   }
 
-  const [event, setEvent] = useState<EventProps>()
-  const query = router.query
-  const id = String(query.id)
-  const idEvent = String(query.idEvent)
-
-  useEffect(() => {
-    const getLeague = async () => {
-      const docRef = doc(getFirestore(firebaseApp), 'Leagues', id)
-      const docSnap = await getDoc(docRef)
-      if (docSnap.exists()) {
-        const league = docSnap.data().events
-        setEvent(league[idEvent])
-      } else {
-        console.log('No such document!')
-      }
-    }
-    getLeague()
-  }, [id, idEvent])
   return (
     <Dashboard>
       <Heading css={{ textAlign: 'center' }}>
@@ -64,6 +75,20 @@ const Events = () => {
         </Text>
 
         <Text colors="black">{event?.description}</Text>
+        <Buttons>
+          <Link href={`/dashboard/eventosdisponiveis/${id}`}>
+            <Button>
+              <Text as="span" colors="green600">
+                Informações da Liga
+              </Text>
+            </Button>
+          </Link>
+          <Button onClick={subscribeEvents}>
+            <Text as="span" colors="green600">
+              Marque Presença!!
+            </Text>
+          </Button>
+        </Buttons>
       </Container>
     </Dashboard>
   )

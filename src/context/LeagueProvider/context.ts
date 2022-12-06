@@ -8,7 +8,7 @@ export interface LeaguesProps {
   description: string
   imageURL: string
   status: string
-  events: []
+  events: [{}]
 }
 
 export const LeagueContext = createContext({
@@ -18,6 +18,7 @@ export const LeagueContext = createContext({
     leagueInactive: {} as LeaguesProps[],
     nextIndiceLeague: 0,
     events: [],
+    eventsDisponibles: [],
     optionsEventsActive: [],
   },
   dispatch: (action: any) => action,

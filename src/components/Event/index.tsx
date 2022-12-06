@@ -18,18 +18,19 @@ interface EventProps {
     data: string
     name: string
     description: string
+    idLeague: string
   }
-
-  idLeague: string
 }
 
-export const Event = ({ event, idLeague }: EventProps) => {
+export const Event = ({ event }: EventProps) => {
   const viewButton = useMediaQuery('(max-width: 640px)')
   const router = useRouter()
   const dirRouter = router.pathname.includes('/dashboard/ligas/')
 
+  console.log(event)
+
   const handleDeleteEvent = async () => {
-    const docRef = doc(getFirestore(firebaseApp), 'Leagues', idLeague)
+    const docRef = doc(getFirestore(firebaseApp), 'Leagues', event.idLeague)
     const docSnap = await getDoc(docRef)
     if (docSnap.exists()) {
       const events = docSnap.data()?.events
@@ -63,8 +64,15 @@ export const Event = ({ event, idLeague }: EventProps) => {
     }
   }
 
+  //  compare event.data com data atual
+  const dateEvents = event.data.replace(/-/g, '/')
+  const date = new Date(dateEvents)
+  const dateNow = new Date()
+
+  const eventInactive = date < dateNow
+
   return (
-    <Card>
+    <Card eventInactive={eventInactive}>
       {viewButton && (
         <Text as="h3" colors="green50" size="2xl">
           <strong>{event?.name}</strong>
@@ -79,7 +87,10 @@ export const Event = ({ event, idLeague }: EventProps) => {
 
       {viewButton && (
         <Buttons dirRouter={dirRouter}>
-          <Link className="aboutUs" href={`${idLeague}/evento/${event.id}`}>
+          <Link
+            className="aboutUs"
+            href={`${event.idLeague}/evento/${event.id}`}
+          >
             <Button>
               <Text as="span" colors="green500">
                 <strong>Ver mais</strong>
@@ -108,7 +119,10 @@ export const Event = ({ event, idLeague }: EventProps) => {
 
         <Buttons dirRouter={dirRouter}>
           {dirRouter ? (
-            <Link className="aboutUs" href={`${idLeague}/evento/${event?.id}`}>
+            <Link
+              className="aboutUs"
+              href={`${event.idLeague}/evento/${event?.id}`}
+            >
               <Button>
                 <Text as="span" colors="green500">
                   <strong>Ver mais</strong>
@@ -118,11 +132,11 @@ export const Event = ({ event, idLeague }: EventProps) => {
           ) : (
             <Link
               className="aboutUs"
-              href={`/dashboard/eventosdisponiveis/${idLeague}/evento/${event?.id}`}
+              href={`/dashboard/eventosdisponiveis/${event.idLeague}/evento/${event?.id}`}
             >
               <Button>
                 <Text as="span" colors="green500">
-                  <strong>Ver mais</strong>
+                  <strong>Ver maisss</strong>
                 </Text>
               </Button>
             </Link>

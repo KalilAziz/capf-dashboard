@@ -61,6 +61,16 @@ export const Card = styled('div', {
     maxWidth: '100%',
     padding: '$3 $5',
   },
+
+  variants: {
+    eventInactive: {
+      true: {
+        opacity: 0.5,
+        pointerEvents: 'none',
+        cursor: 'not-allowed',
+      },
+    },
+  },
 })
 
 export const Buttons = styled('div', {

@@ -50,6 +50,9 @@ export const reducer = (state: any, action: any) => {
     case types.SET_EVENTS: {
       return { ...state, events: action.payload }
     }
+    case types.SET_EVENTS_DISPONIBLES: {
+      return { ...state, eventsDisponibles: action.payload }
+    }
     case types.SET_OPTIONS_EVENTS_ACTIVE: {
       return { ...state, optionsEventsActive: action.payload }
     }

@@ -21,5 +21,8 @@ export const setNextIndiceLeague = (dispath: any, data: any) =>
 export const setEvents = (dispath: any, data: any) =>
   dispath({ type: types.SET_EVENTS, payload: data })
 
+export const setEventsDisponibles = (dispath: any, data: any) =>
+  dispath({ type: types.SET_EVENTS_DISPONIBLES, payload: data })
+
 export const setOptionsEventsActive = (dispath: any, data: any) =>
   dispath({ type: types.SET_OPTIONS_EVENTS_ACTIVE, payload: data })

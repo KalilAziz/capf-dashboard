@@ -50,13 +50,16 @@ export default function Register() {
     const user = auth.currentUser
     if (user !== null) {
       const emailUser = String(user.email)
+      console.log(emailUser)
       const createUsers = emailUsers?.includes(emailUser)
+      console.log('createUsers', createUsers)
       setNotUser(createUsers)
       setMounted(createUsers)
     }
   }, [emailUsers])
 
   useEffect(() => {
+    console.log(notUser)
     if (notUser) {
       router.push('/dashboard/eventosdisponiveis')
     }

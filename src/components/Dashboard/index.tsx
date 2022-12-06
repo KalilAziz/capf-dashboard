@@ -11,8 +11,10 @@ import { Container, Content } from './styles'
 import { FiMonitor } from 'react-icons/fi'
 import { darkTheme } from '../../styles'
 import { useTheme } from 'next-themes'
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useContext, useEffect, useState } from 'react'
 import { SectionContent } from '../SectionContent'
+import { LoginContext } from '../../context/UserProvider/context'
+import { useRouter } from 'next/router'
 interface DashboardProps {
   children: ReactNode
 }
@@ -20,6 +22,14 @@ interface DashboardProps {
 export const Dashboard = ({ children }: DashboardProps) => {
   const { theme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const { signedStatus } = useContext(LoginContext)
+  const router = useRouter()
+
+  console.log(signedStatus)
+
+  if (!signedStatus) {
+    router.push('/')
+  }
 
   useEffect(() => {
     setMounted(true)
