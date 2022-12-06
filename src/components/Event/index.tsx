@@ -8,17 +8,16 @@ import Link from 'next/link'
 import { doc, getDoc, getFirestore, updateDoc } from 'firebase/firestore'
 import { firebaseApp } from '../../config/firebaseConfig'
 
-import { toast, ToastContainer } from 'react-toastify'
 import { useRouter } from 'next/router'
 import useMediaQuery from '../../hooks/MediaQuery'
 
 interface EventProps {
   event: {
-    id: number
-    data: string
-    name: string
-    description: string
-    idLeague: string
+    id?: number | undefined
+    data: string | undefined
+    name: string | undefined
+    description: string | undefined
+    idLeague: string | undefined
   }
 }
 
@@ -30,7 +29,11 @@ export const Event = ({ event }: EventProps) => {
   console.log(event)
 
   const handleDeleteEvent = async () => {
-    const docRef = doc(getFirestore(firebaseApp), 'Leagues', event.idLeague)
+    const docRef = doc(
+      getFirestore(firebaseApp),
+      'Leagues',
+      String(event.idLeague),
+    )
     const docSnap = await getDoc(docRef)
     if (docSnap.exists()) {
       const events = docSnap.data()?.events
@@ -40,36 +43,18 @@ export const Event = ({ event }: EventProps) => {
       await updateDoc(docRef, {
         events: newEvents,
       })
-      toast.success('Evento Excluido com sucesso', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'dark',
-      })
-    } else {
-      toast.success('Erro ao excluir evento', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'dark',
-      })
     }
   }
 
   //  compare event.data com data atual
-  const dateEvents = event.data.replace(/-/g, '/')
-  const date = new Date(dateEvents)
-  const dateNow = new Date()
+  let eventInactive = false
 
-  const eventInactive = date < dateNow
+  if (event.data !== undefined) {
+    const dateEvents = event.data.replace(/-/g, '/')
+    const date = new Date(dateEvents)
+    const dateNow = new Date()
+    eventInactive = date < dateNow
+  }
 
   return (
     <Card eventInactive={eventInactive}>
@@ -149,7 +134,6 @@ export const Event = ({ event }: EventProps) => {
           </Button>
         </Buttons>
       </div>
-      <ToastContainer />
     </Card>
   )
 }

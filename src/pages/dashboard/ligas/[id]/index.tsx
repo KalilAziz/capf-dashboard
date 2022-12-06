@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { BiSearchAlt2 } from 'react-icons/bi'
 import { Button } from '../../../../components/Button'
@@ -12,66 +12,40 @@ import {
   ContentLeague,
 } from '../../../../styles/pages/dashboard/ligas/liga'
 
-import { firebaseApp } from '../../../../config/firebaseConfig'
-import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { MdQrCodeScanner } from 'react-icons/md'
 
 import { useRouter } from 'next/router'
 import { Events } from '../../../../components/Events'
 import { LeagueContext } from '../../../../context/LeagueProvider/context'
 
+interface EventsProps {
+  id?: number
+  data: string
+  name: string
+  description: string
+  idLeague: string
+  imageURL: string
+  nameLeague: string
+  urlCertificate: string
+}
+
 const Liga = () => {
-  interface League {
-    id: string
-    name: string
-    initials: string
-    description: string
-    orientation: string
-    imageURL: string
-    events: []
-  }
-
-  interface Event {
-    id: number
-    data: string
-    name: string
-    description: string
-  }
-
-  const [league, setLeague] = useState<League>()
   const [searchText, setSearchText] = useState('')
 
   const router = useRouter()
 
   const query = router.query
 
-  const id = String(query.id)
+  const id = query.id
 
   const { state } = useContext(LeagueContext)
 
-  const filteredEvents = state.events.map((event: any) => {
-    const eventsFilter = event.filter((event: any) => {
-      return event.idLeague === id
-    })
-    return eventsFilter
+  const leagueCompatibleId = state.league.filter((league) => {
+    return Number(league.id) === Number(id)
   })
 
-  const events = filteredEvents[0]?.map((event: Event, index: number) => {
-    return { ...event, id: index }
-  })
-
-  useEffect(() => {
-    const getLeague = async () => {
-      const docRef = doc(getFirestore(firebaseApp), 'Leagues', String(id))
-      const docSnap = await getDoc(docRef)
-      if (docSnap.exists()) {
-        setLeague(docSnap.data() as League)
-      } else {
-        console.log('No such document!')
-      }
-    }
-    getLeague()
-  }, [id])
+  const league = leagueCompatibleId[0]
+  const events = league.events as EventsProps[]
 
   return (
     <Dashboard>

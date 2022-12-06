@@ -30,6 +30,7 @@ const League = () => {
     return league.name.toLowerCase().includes(searchText.toLowerCase())
   })
 
+  console.log(state)
   return (
     <Dashboard>
       <Heading css={{ textAlign: 'center' }}>

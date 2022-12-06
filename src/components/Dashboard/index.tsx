@@ -25,11 +25,11 @@ export const Dashboard = ({ children }: DashboardProps) => {
   const { signedStatus } = useContext(LoginContext)
   const router = useRouter()
 
-  console.log(signedStatus)
-
-  if (!signedStatus) {
-    router.push('/')
-  }
+  useEffect(() => {
+    if (!signedStatus) {
+      router.push('/')
+    }
+  }, [signedStatus, router])
 
   useEffect(() => {
     setMounted(true)

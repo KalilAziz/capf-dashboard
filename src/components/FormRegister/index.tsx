@@ -30,6 +30,7 @@ import { LoginContext } from '../../context/UserProvider/context'
 import { addDoc, collection, getFirestore } from 'firebase/firestore'
 import { firebaseApp } from '../../config/firebaseConfig'
 import { useRouter } from 'next/router'
+import { UsersContext } from '../../context/UsersProvider/context'
 
 export const FormRegister = () => {
   const [counter, setCounter] = useState(1)
@@ -44,9 +45,14 @@ export const FormRegister = () => {
   const [registration, setRegistration] = useState('')
   const [period, setPeriod] = useState('')
 
+  // state - userExists
+  const [userExists, setUserExists] = useState(false)
+
   const router = useRouter()
 
   const { signOutUsers, createInEmail } = useContext(LoginContext)
+
+  const { state } = useContext(UsersContext)
 
   // Conect to firebase
   const db = getFirestore(firebaseApp)
@@ -75,6 +81,19 @@ export const FormRegister = () => {
       registration,
       period,
     )
+
+    if (userExists) {
+      toast.success('Usuário já existe', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      })
+    }
 
     if (next && counter <= 3) {
       setCounter(counter + 1)
@@ -111,13 +130,19 @@ export const FormRegister = () => {
       cellphone,
       registration,
       period,
-      type: 'Aluno',
+      imageURL: '',
+      status: 'student',
       events: [],
     }
 
-    createInEmail(email, password)
+    state.users.forEach((user) => {
+      if (user.email === email) {
+        setUserExists(true)
+      }
+    })
 
-    if (salve && counter <= 3) {
+    if (!userExists && salve && counter <= 3) {
+      createInEmail(email, password)
       addDoc(useCollactionRef, dataUser)
       toast.success('Usuário Criado com sucesso', {
         position: 'top-right',

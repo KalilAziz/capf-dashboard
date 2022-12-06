@@ -1,5 +1,16 @@
 import { createContext } from 'react'
 
+interface EventsProps {
+  id?: number
+  data: string
+  name: string
+  description: string
+  idLeague: string
+  imageURL: string
+  nameLeague: string
+  urlCertificate: string
+}
+
 export interface LeaguesProps {
   id: string
   name: string
@@ -8,7 +19,8 @@ export interface LeaguesProps {
   description: string
   imageURL: string
   status: string
-  events: [{}]
+  // events: [{}]
+  events: EventsProps[]
 }
 
 export const LeagueContext = createContext({

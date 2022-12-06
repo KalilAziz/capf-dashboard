@@ -30,6 +30,7 @@ import { LoginContext } from '../../context/UserProvider/context'
 import { addDoc, collection, getFirestore } from 'firebase/firestore'
 import { firebaseApp } from '../../config/firebaseConfig'
 import { useRouter } from 'next/router'
+import { UsersContext } from '../../context/UsersProvider/context'
 
 interface UserProps {
   displayName: string
@@ -38,7 +39,15 @@ interface UserProps {
 }
 
 export const FormRegisterProvider = () => {
+  // Conect to firebase
+  const db = getFirestore(firebaseApp)
+  // FireStore
+  const useCollactionRef = collection(db, 'Users')
+
+  // Counter steps form
   const [counter, setCounter] = useState(1)
+
+  // State to save the user data
   const [user, setUser] = useState<UserProps>()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -49,13 +58,21 @@ export const FormRegisterProvider = () => {
   const [registration, setRegistration] = useState('')
   const [period, setPeriod] = useState('')
 
+  // Function signOut
+  const { signOutUsers } = useContext(LoginContext)
+
+  // Context of Users
+  const { state } = useContext(UsersContext)
+
+  // state - userExists
+  const [userExists, setUserExists] = useState(false)
+
   const router = useRouter()
 
   useEffect(() => {
     const user = localStorage.getItem('@AuthFireBase:user')
-    // convertendo o user para objeto
-    // verificando se o userObject existe
     if (user) {
+      // convertendo o user para objeto
       const userObject = JSON.parse(user)
       setUser(userObject as UserProps)
       setName(userObject.displayName)
@@ -63,12 +80,17 @@ export const FormRegisterProvider = () => {
     }
   }, [])
 
-  const { signOutUsers } = useContext(LoginContext)
+  useEffect(() => {
+    state.users.forEach((user) => {
+      if (user.email === email) {
+        setUserExists(true)
+      }
+    })
+  }, [state.users, email])
 
-  // Conect to firebase
-  const db = getFirestore(firebaseApp)
-  // FireStore
-  const useCollactionRef = collection(db, 'Users')
+  if (userExists) {
+    router.push('/dashboard')
+  }
 
   const handleISStudentPuc = (isStudent: boolean) => {
     setStudent(isStudent)

@@ -40,7 +40,7 @@ export const Certificate = ({ certificate }: CertificateProps) => {
   const { state } = useContext(UsersContext)
   const [certificateComponent, setCertificateComponent] = useState(false)
   const UserConected = state.users.filter(
-    (user) => user.name === state.userConected.displayName,
+    (user) => user.email === state.userConected.email,
   )
 
   const user = UserConected[0]

@@ -13,11 +13,11 @@ import { LeagueContext } from '../../context/LeagueProvider/context'
 interface EventsProps {
   events:
     | {
-        id: number
-        data: string
-        name: string
-        description: string
-        idLeague: string
+        id?: number | undefined
+        data: string | undefined
+        name: string | undefined
+        description: string | undefined
+        idLeague: string | undefined
       }[]
     | undefined
 

@@ -11,6 +11,7 @@ import { Search } from '../../styles/pages/dashboard/meuseventos'
 const Certificate = () => {
   const [searchText, setSearchText] = useState('')
   const { state } = useContext(UsersContext)
+  console.log(state)
 
   const filteredEventsWithIndexAndFlat =
     state.eventsSubscribeInactiveUser.filter((event: any) => {

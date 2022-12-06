@@ -15,7 +15,6 @@ interface LeaguesssProps {
     description: string
     imageURL: string
     status: string
-    events: []
   }[]
 }
 

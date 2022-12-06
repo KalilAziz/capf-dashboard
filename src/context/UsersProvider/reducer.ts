@@ -19,7 +19,7 @@ export const reducer = (state: any, action: any) => {
     case types.SET_EVENTS_SUBSCRIBE: {
       const setSubscribe = async () => {
         const UserConected = state.users.filter(
-          (user: any) => user.name === state.userConected.displayName,
+          (user: any) => user.email === state.userConected.email,
         )
         const user = UserConected[0]
         const UserRef = doc(getFirestore(firebaseApp), 'Users', String(user.id))
