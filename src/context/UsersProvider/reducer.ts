@@ -29,7 +29,7 @@ export const reducer = (state: any, action: any) => {
         })
       }
       setSubscribe()
-      console.log('evento adicionado')
+
       return { ...state }
     }
     case types.EVENTS_SUBSCRIBE_USER_CONECTED: {

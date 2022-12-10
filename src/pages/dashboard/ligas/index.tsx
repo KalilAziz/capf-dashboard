@@ -3,7 +3,6 @@ import { useContext, useState } from 'react'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { BiSearchAlt2 } from 'react-icons/bi'
 import { Button } from '../../../components/Button'
-import { Dashboard } from '../../../components/Dashboard'
 import { Heading } from '../../../components/Heading'
 import { Input } from '../../../components/input'
 import { SelectStatus } from '../../../components/SelectStatus'
@@ -30,9 +29,8 @@ const League = () => {
     return league.name.toLowerCase().includes(searchText.toLowerCase())
   })
 
-  console.log(state)
   return (
-    <Dashboard>
+    <>
       <Heading css={{ textAlign: 'center' }}>
         <Text as="h2" colors="black" size="2xl">
           Criar Liga
@@ -86,7 +84,7 @@ const League = () => {
       {searchText === '' && option === 'inactive' && (
         <Leagues leagues={state.leagueInactive} />
       )}
-    </Dashboard>
+    </>
   )
 }
 

@@ -2,8 +2,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
+import { toast } from 'react-toastify'
 import { Button } from '../../../../../components/Button'
-import { Dashboard } from '../../../../../components/Dashboard'
 import { Heading } from '../../../../../components/Heading'
 import { Text } from '../../../../../components/Text'
 
@@ -45,11 +45,21 @@ const Events = () => {
 
   const subscribeEvents = async () => {
     setEventsSubscribe(dispatch, event)
+    toast.success('Evento inscrito com sucesso', {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'dark',
+    })
     return console.log('Evento inscrito')
   }
 
   return (
-    <Dashboard>
+    <>
       <Heading css={{ textAlign: 'center' }}>
         <Text as="h2" colors="black" size="2xl">
           Informação
@@ -90,7 +100,7 @@ const Events = () => {
           </Button>
         </Buttons>
       </Container>
-    </Dashboard>
+    </>
   )
 }
 export default Events

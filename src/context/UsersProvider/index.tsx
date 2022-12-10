@@ -1,3 +1,4 @@
+import { getAuth, onAuthStateChanged } from '@firebase/auth'
 import {
   collection,
   getFirestore,
@@ -23,12 +24,6 @@ import { reducer } from './reducer'
 
 interface LeagueProviderProps {
   children: ReactNode
-}
-
-interface UserParse {
-  name: string
-  email: string
-  id: string
 }
 
 export const UsersProvider = ({ children }: LeagueProviderProps) => {
@@ -61,70 +56,73 @@ export const UsersProvider = ({ children }: LeagueProviderProps) => {
         })
         setOptionsUsersAdvisor(dispatch, optionsUsers)
 
-        // User Conected
-        const user = localStorage.getItem('@AuthFireBase:user')
-        let userParse = {} as UserParse
-        if (user !== null) {
-          userParse = JSON.parse(user) as UserParse
-          userConected(dispatch, userParse)
-        }
+        const auth = getAuth()
+        onAuthStateChanged(auth, (userConect) => {
+          if (userConect) {
+            const uid = userConect.uid
+            const userconected = Users.filter((user) => user.uid === uid)
+            const user = userconected[0]
+            userConected(dispatch, user)
 
-        if (user !== undefined && user !== null) {
-          // Events Subscribe user conected
-          console.log('user', user)
-          const eventsSubscribeUser = Users.filter(
-            (user) => user.email === userParse.email,
-          )
-          eventsSubscribe(dispatch, eventsSubscribeUser[0].events)
+            // Events Subscribe user conected
 
-          // Events Subscribe user Active
-          const eventsActive = eventsSubscribeUser[0].events.map(
-            (event: any) => {
-              const dateEvents = event.data.replace(/-/g, '/')
-              const date = new Date(dateEvents)
-              const dateNow = new Date()
-              // retorna array com data maior que data atual
-              if (date > dateNow) {
-                return event
-              }
-              return null
-            },
-          )
+            const eventsSubscribeUser = Users.filter(
+              (users) => users.email === user.email,
+            )
+            if (eventsSubscribeUser.length < 0) return
+            eventsSubscribe(dispatch, eventsSubscribeUser[0]?.events)
 
-          // retirar array vazio
-          const eventsDisponibles = eventsActive.filter(
-            (event: any) => event !== null,
-          )
+            // Events Subscribe user Active
 
-          eventsSubscribeActiveUser(dispatch, eventsDisponibles)
+            const eventsActive = eventsSubscribeUser[0]?.events.map(
+              (event: any) => {
+                const dateEvents = event.data.replace(/-/g, '/')
+                const date = new Date(dateEvents)
+                const dateNow = new Date()
+                // retorna array com data maior que data atual
+                if (date > dateNow) {
+                  return event
+                }
+                return null
+              },
+            )
 
-          // Events Subscribe user Active
-          const eventsInactive = eventsSubscribeUser[0].events.map(
-            (event: any) => {
-              const dateEvents = event.data.replace(/-/g, '/')
-              const date = new Date(dateEvents)
-              const dateNow = new Date()
-              // retorna array com data maior que data atual
-              if (date < dateNow) {
-                return event
-              }
-              return null
-            },
-          )
+            // retirar array vazio
+            const eventsDisponibles = eventsActive?.filter(
+              (event: any) => event !== null,
+            )
 
-          // retirar array vazio
-          const eventsIndisponible = eventsInactive.filter(
-            (event: any) => event !== null,
-          )
-          eventsSubscribeInactiveUser(dispatch, eventsIndisponible)
-        }
+            eventsSubscribeActiveUser(dispatch, eventsDisponibles)
+
+            // Events Subscribe user Active
+
+            const eventsInactive = eventsSubscribeUser[0]?.events.map(
+              (event: any) => {
+                const dateEvents = event.data.replace(/-/g, '/')
+                const date = new Date(dateEvents)
+                const dateNow = new Date()
+                // retorna array com data maior que data atual
+                if (date < dateNow) {
+                  return event
+                }
+                return null
+              },
+            )
+
+            // retirar array vazio
+            const eventsIndisponible = eventsInactive?.filter(
+              (event: any) => event !== null,
+            )
+            eventsSubscribeInactiveUser(dispatch, eventsIndisponible)
+          } else {
+            console.log('falha em recuperar usuario')
+          }
+        })
       })
     }
 
     getUsers()
   }, [signedStatus])
-
-  console.log('signedStatus', signedStatus)
 
   return (
     <UsersContext.Provider value={{ state, dispatch }}>

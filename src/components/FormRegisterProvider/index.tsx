@@ -49,6 +49,7 @@ export const FormRegisterProvider = () => {
 
   // State to save the user data
   const [user, setUser] = useState<UserProps>()
+  const [uid, setUid] = useState<string>('')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [student, setStudent] = useState(true)
@@ -77,6 +78,7 @@ export const FormRegisterProvider = () => {
       setUser(userObject as UserProps)
       setName(userObject.displayName)
       setEmail(userObject.email)
+      setUid(userObject.uid)
     }
   }, [])
 
@@ -89,7 +91,7 @@ export const FormRegisterProvider = () => {
   }, [state.users, email])
 
   if (userExists) {
-    router.push('/dashboard')
+    router.push('/dashboard/eventosdisponiveis')
   }
 
   const handleISStudentPuc = (isStudent: boolean) => {
@@ -138,6 +140,7 @@ export const FormRegisterProvider = () => {
     )
 
     const dataUser = {
+      uid,
       name,
       email,
       student,
@@ -163,7 +166,7 @@ export const FormRegisterProvider = () => {
         progress: undefined,
         theme: 'dark',
       })
-      router.push('/dashboard/eventosdisponiveis')
+      router.push('/dashboard/')
     }
   }
 

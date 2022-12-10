@@ -2,7 +2,6 @@ import { useContext, useState } from 'react'
 import { BiSearchAlt2 } from 'react-icons/bi'
 import { Button } from '../../../components/Button'
 import { CalendarComponent } from '../../../components/Calendar'
-import { Dashboard } from '../../../components/Dashboard'
 import { Events } from '../../../components/Events'
 import { Heading } from '../../../components/Heading'
 import { Input } from '../../../components/input'
@@ -18,7 +17,6 @@ const MyEvents = () => {
 
   // unir todos os arrays de state.events
   const events = state.events.reduce((acc, curr) => [...acc, ...curr], [])
-  console.log(events)
 
   // filter searchText
   const filteredTextEvents = events.filter((event: any) => {
@@ -46,48 +44,46 @@ const MyEvents = () => {
 
   return (
     <>
-      <Dashboard>
-        <Heading css={{ margin: '$20 0' }}>
-          <Text as="h2" colors="black" size="2xl">
-            Calendário de eventos
+      <Heading css={{ margin: '$20 0' }}>
+        <Text as="h2" colors="black" size="2xl">
+          Calendário de eventos
+        </Text>
+      </Heading>
+      <Search>
+        <label htmlFor="" className="search">
+          <Text as="span" colors="green50" size="lg">
+            Pesquisar:
           </Text>
-        </Heading>
-        <Search>
-          <label htmlFor="" className="search">
-            <Text as="span" colors="green50" size="lg">
-              Pesquisar:
-            </Text>
-            <Input.Root>
-              <Input.icon>
-                <BiSearchAlt2 />
-              </Input.icon>
-              <Input.Input
-                type="search"
-                onChange={(e) => setSearchText(e.target.value)}
-                value={option === 'all' ? searchText : ''}
-                disabled={option !== 'all'}
-                placeholder="Digite o nome da liga"
-              />
-            </Input.Root>
-          </label>
-          <div className="select">
-            <Button>
-              <SelectStatus
-                label="Sigla das Ligas disponíveis"
-                options={state.optionsEventsActive}
-                setOption={setOption}
-                defaultValue="all"
-              />
-            </Button>
-          </div>
-        </Search>
-        <CalendarComponent />
-        {option !== 'all' ? (
-          <Events events={eventsFil[0]} option={option} />
-        ) : (
-          <Events events={filteredTextEvents} option={option} />
-        )}
-      </Dashboard>
+          <Input.Root>
+            <Input.icon>
+              <BiSearchAlt2 />
+            </Input.icon>
+            <Input.Input
+              type="search"
+              onChange={(e) => setSearchText(e.target.value)}
+              value={option === 'all' ? searchText : ''}
+              disabled={option !== 'all'}
+              placeholder="Digite o nome da liga"
+            />
+          </Input.Root>
+        </label>
+        <div className="select">
+          <Button>
+            <SelectStatus
+              label="Sigla das Ligas disponíveis"
+              options={state.optionsEventsActive}
+              setOption={setOption}
+              defaultValue="all"
+            />
+          </Button>
+        </div>
+      </Search>
+      <CalendarComponent />
+      {option !== 'all' ? (
+        <Events events={eventsFil[0]} option={option} />
+      ) : (
+        <Events events={filteredTextEvents} option={option} />
+      )}
     </>
   )
 }

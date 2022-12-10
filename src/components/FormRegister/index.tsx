@@ -424,8 +424,6 @@ export const FormRegister = () => {
                 pauseOnHover
                 theme="light"
               />
-              {/* Same as */}
-              <ToastContainer />
 
               {counter < 3 ? (
                 <Button onClick={IncrementCounter}>

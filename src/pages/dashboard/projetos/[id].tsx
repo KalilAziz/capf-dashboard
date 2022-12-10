@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { GetStaticPaths, GetStaticProps } from 'next'
-import { Dashboard } from '../../../components/Dashboard'
 import { Heading } from '../../../components/Heading'
 import { Container } from '../../../styles/pages/dashboard/projetos/id'
 import { Text } from '../../../components/Text'
@@ -98,7 +97,7 @@ const Project = ({ projects }: ProjectProps) => {
       })
   }
   return (
-    <Dashboard>
+    <>
       <Heading css={{ margin: '$20 0' }}>
         <Text as="h2" colors="black" size="2xl">
           Informação do projeto {projects.name}
@@ -156,7 +155,7 @@ const Project = ({ projects }: ProjectProps) => {
           download
         </a>
       </button>
-    </Dashboard>
+    </>
   )
 }
 

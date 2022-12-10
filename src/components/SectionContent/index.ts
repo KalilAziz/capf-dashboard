@@ -4,5 +4,4 @@ export const SectionContent = styled('section', {
   maxWidth: '1200px',
   margin: '0 auto',
   padding: '$3 $4',
-  border: '1px solid yellow',
 })

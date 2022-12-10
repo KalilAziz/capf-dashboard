@@ -16,7 +16,6 @@ interface CertificateProps {
   }
 }
 export const CertificateComponent = ({ certificate }: CertificateProps) => {
-  console.log(certificate)
   return (
     <CertificateContainer id="capture123">
       <div className="content">

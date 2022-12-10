@@ -3,7 +3,6 @@ import { useRouter } from 'next/router'
 
 import { Box } from '../../../../components/Box'
 import { Button } from '../../../../components/Button'
-import { Dashboard } from '../../../../components/Dashboard'
 import { Heading } from '../../../../components/Heading'
 import { Input } from '../../../../components/input'
 import { Text } from '../../../../components/Text'
@@ -57,8 +56,6 @@ const CreateEvent = () => {
 
   const league = League[0]
 
-  console.log(league.name)
-
   const handleCreateLeague = async () => {
     const LeagueRef = doc(db, 'Leagues', String(idLeague))
 
@@ -103,7 +100,7 @@ const CreateEvent = () => {
   }
 
   return (
-    <Dashboard>
+    <>
       <Heading css={{ textAlign: 'center' }}>
         <Text as="h2" colors="green50" size="2xl">
           Criar Evento
@@ -208,7 +205,7 @@ const CreateEvent = () => {
         </Container>
       </Box>
       <ToastContainer />
-    </Dashboard>
+    </>
   )
 }
 

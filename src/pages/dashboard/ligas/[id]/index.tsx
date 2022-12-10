@@ -3,7 +3,6 @@ import { useContext, useState } from 'react'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { BiSearchAlt2 } from 'react-icons/bi'
 import { Button } from '../../../../components/Button'
-import { Dashboard } from '../../../../components/Dashboard'
 import { Heading } from '../../../../components/Heading'
 import { Input } from '../../../../components/input'
 import { Text } from '../../../../components/Text'
@@ -45,10 +44,17 @@ const Liga = () => {
   })
 
   const league = leagueCompatibleId[0]
-  const events = league.events as EventsProps[]
+  const events = league?.events as EventsProps[]
+  // colocar indice em cada objeto do array events
+  const eventsWithIndex = events?.map((event, index) => {
+    return {
+      ...event,
+      id: index,
+    }
+  })
 
   return (
-    <Dashboard>
+    <>
       <Heading css={{ textAlign: 'center' }}>
         <Text as="h2" colors="black" size="2xl">
           Informações da Liga
@@ -110,8 +116,8 @@ const Liga = () => {
           Eventos da Liga
         </Text>
       </Heading>
-      <Events events={events} />
-    </Dashboard>
+      <Events events={eventsWithIndex} />
+    </>
   )
 }
 

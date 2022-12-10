@@ -1,7 +1,5 @@
-import { Dashboard } from '../../components/Dashboard'
-
 const SiteManager = () => {
-  return <Dashboard>.....</Dashboard>
+  return <div />
 }
 
 export default SiteManager

@@ -2,7 +2,6 @@ import axios from 'axios'
 import { GetStaticProps } from 'next'
 import { useState } from 'react'
 import { BiSearchAlt2 } from 'react-icons/bi'
-import { Dashboard } from '../../../components/Dashboard'
 import { Heading } from '../../../components/Heading'
 import { Input } from '../../../components/input'
 import { Projects } from '../../../components/Projects'
@@ -34,7 +33,7 @@ const ProjectsPage = ({ projects }: PropjectsProps) => {
   })
 
   return (
-    <Dashboard>
+    <>
       <Heading css={{ margin: '$20 0' }}>
         <Text as="h2" colors="black" size="2xl">
           Projetos
@@ -63,7 +62,7 @@ const ProjectsPage = ({ projects }: PropjectsProps) => {
       ) : (
         <Projects projects={filteredProjects} />
       )}
-    </Dashboard>
+    </>
   )
 }
 

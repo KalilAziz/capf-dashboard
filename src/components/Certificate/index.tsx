@@ -20,6 +20,7 @@ import { UsersContext } from '../../context/UsersProvider/context'
 import { doc, getDoc, getFirestore, updateDoc } from 'firebase/firestore'
 import { toast } from 'react-toastify'
 import { CertificateComponent } from '../CertificateComponent'
+import JsPDF from 'jspdf'
 
 interface CertificateProps {
   certificate: {
@@ -51,20 +52,28 @@ export const Certificate = ({ certificate }: CertificateProps) => {
     if (certificateComponent) {
       html2canvas(document.querySelector('#capture123')!).then(
         async (canvas) => {
-          canvas.toBlob(function (blob) {
-            const storageRef = ref(
-              storage,
-              `${state.userConected.email}/certificate-${certificate.name}-${certificate.nameLeague}`,
-            )
-            uploadBytesResumable(storageRef, blob!).then(async () => {
-              getDownloadURL(storageRef).then(function (url) {
-                setUrlCertificateBase(url)
-              })
+          const img = canvas.toDataURL('image/jpeg')
+          const pdf = new JsPDF('landscape', 'px', 'a4')
+          const width = pdf.internal.pageSize.getHeight()
+          const height = pdf.internal.pageSize.getWidth()
+          pdf.addImage(img, 'jpeg', 0, 0, height, width)
+          //  pdf.save('certificado.pdf')
+          // salvar pdf em contante
+          const file = pdf.output('blob')
+
+          const storageRef = ref(
+            storage,
+            `${state.userConected.email}/certificate-${certificate.name}-${certificate.nameLeague}`,
+          )
+
+          await uploadBytesResumable(storageRef, file).then(async () => {
+            getDownloadURL(storageRef).then(function (url) {
+              setUrlCertificateBase(url)
             })
-          }, 'image/jpeg')
+            setCertificateComponent(false)
+          })
         },
       )
-      setCertificateComponent(false)
     }
   }
 
@@ -88,7 +97,7 @@ export const Certificate = ({ certificate }: CertificateProps) => {
       await updateDoc(docRef, {
         events,
       })
-      toast.success('Evento Excluido com sucesso', {
+      toast.success('Certificado gerado com sucesso', {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
@@ -99,7 +108,7 @@ export const Certificate = ({ certificate }: CertificateProps) => {
         theme: 'dark',
       })
     } else {
-      toast.success('Erro ao excluir evento', {
+      toast.success('Erro ao gerar certificado', {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,

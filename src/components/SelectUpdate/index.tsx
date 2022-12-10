@@ -8,6 +8,7 @@ import {
   ChevronUpIcon,
 } from '@radix-ui/react-icons'
 import { styled } from '../../styles'
+import { toast } from 'react-toastify'
 
 const SelectTrigger = styled(Select.SelectTrigger, {
   all: 'unset',

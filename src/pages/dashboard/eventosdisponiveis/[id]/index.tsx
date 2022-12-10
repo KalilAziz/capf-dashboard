@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { BiSearchAlt2 } from 'react-icons/bi'
-import { Dashboard } from '../../../../components/Dashboard'
 import { Heading } from '../../../../components/Heading'
 import { Input } from '../../../../components/input'
 import { Text } from '../../../../components/Text'
@@ -61,7 +60,7 @@ const Liga = () => {
   })
 
   return (
-    <Dashboard>
+    <>
       <Heading css={{ textAlign: 'center' }}>
         <Text as="h2" colors="black" size="2xl">
           Informações da Liga
@@ -110,7 +109,7 @@ const Liga = () => {
         </Text>
       </Heading>
       <Events events={events} />
-    </Dashboard>
+    </>
   )
 }
 

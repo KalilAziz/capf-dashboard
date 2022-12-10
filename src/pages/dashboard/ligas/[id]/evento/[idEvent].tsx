@@ -2,7 +2,6 @@ import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { Dashboard } from '../../../../../components/Dashboard'
 import { Heading } from '../../../../../components/Heading'
 import { Text } from '../../../../../components/Text'
 import { firebaseApp } from '../../../../../config/firebaseConfig'
@@ -38,7 +37,7 @@ const Events = () => {
     getLeague()
   }, [id, idEvent])
   return (
-    <Dashboard>
+    <>
       <Heading css={{ textAlign: 'center' }}>
         <Text as="h2" colors="black" size="2xl">
           Informação
@@ -65,7 +64,7 @@ const Events = () => {
 
         <Text colors="black">{event?.description}</Text>
       </Container>
-    </Dashboard>
+    </>
   )
 }
 export default Events

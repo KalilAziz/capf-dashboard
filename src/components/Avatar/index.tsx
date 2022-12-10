@@ -4,6 +4,9 @@ import { Text } from '../Text'
 import Image from 'next/image'
 import ImageAvatar from '../../assets/images/Avatar.svg'
 import { AiOutlineSetting } from 'react-icons/ai'
+import Link from 'next/link'
+import { UsersContext } from '../../context/UsersProvider/context'
+import { useContext } from 'react'
 
 const slideUpAndFade = keyframes({
   '0%': { opacity: 0, transform: 'translateY(2px)' },
@@ -100,7 +103,7 @@ const Content = styled(HoverCard.Content, {
   backgroundColor: '$green600',
   boxShadow:
     'hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px',
-  animationDuration: '400ms',
+  animationDuration: '50ms',
   animationTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
   willChange: 'transform, opacity',
   '&[data-state="open"]': {
@@ -115,7 +118,7 @@ const Arrow = styled(HoverCard.Arrow, {
   fill: '$green600',
 })
 
-const Settings = styled('a', {
+const Settings = styled(Link, {
   all: 'unset',
   cursor: 'pointer',
   position: 'absolute',
@@ -130,50 +133,64 @@ const Settings = styled('a', {
 })
 
 interface RootProps {
-  infoUser: {
-    name: string
-    status: string
-    imageUserUrl: string
-    college: string
-    course: string
-    registration: string
-  }
   openMenu: boolean
 }
 
-export const Avatar = ({ infoUser, openMenu }: RootProps) => {
-  const nameArray = infoUser.name.split(' ')
+export const Avatar = ({ openMenu }: RootProps) => {
+  const { state } = useContext(UsersContext)
+  const userConected = state.users.filter(
+    (user) => user.email === state.userConected.email,
+  )
+
+  const user = userConected[0]
+  console.log(state.userConected)
+
+  const nameArray = user?.name.split(' ')
   return (
     <HoverCard.Root>
-      {/* Trigger inicial */}
-      <Trigger asChild>
-        <UrlTrigger
-          href="https://google.com"
-          target="_blank"
-          rel="noreferrer noopener"
-        >
-          <Container gap="large" openMenu={openMenu}>
-            <Img
-              src={infoUser.imageUserUrl || ImageAvatar}
-              width={50}
-              height={50}
-              alt="Image"
-            />
-            <div className="info">
-              <Text css={{ fontWeight: 'bold' }} colors="green50">
-                Olá, {nameArray[0]}
-              </Text>
-              <Text css={{ color: '#ccc' }}>{infoUser.status}</Text>
-            </div>
-          </Container>
-        </UrlTrigger>
-      </Trigger>
+      <Link
+        href="/dashboard/informacaousuario"
+        style={{ textDecoration: 'none' }}
+      >
+        <Trigger asChild>
+          <UrlTrigger rel="noreferrer noopener">
+            <Container gap="large" openMenu={openMenu}>
+              <Img
+                src={user?.imageURL || ImageAvatar}
+                width={50}
+                height={50}
+                alt="Image"
+              />
+              <div className="info">
+                <Text css={{ fontWeight: 'bold' }} colors="green50">
+                  Olá, {nameArray === undefined ? '' : nameArray[0]}
+                </Text>
+                <Text css={{ color: '#ccc' }}>
+                  {user?.status === 'student'
+                    ? 'Estudante'
+                    : user?.status === 'advisor'
+                    ? 'Orientador'
+                    : user?.status === 'admin'
+                    ? 'Administrador'
+                    : user?.status === 'managerOfLeague'
+                    ? 'Gestor de Ligas'
+                    : user?.status === 'managerOfColig'
+                    ? 'Gestor do Colig'
+                    : user?.status === 'administrator'
+                    ? 'Administrador'
+                    : ''}
+                </Text>
+              </div>
+            </Container>
+          </UrlTrigger>
+        </Trigger>
+      </Link>
 
       {/* Portal hover do Trigger */}
 
       <Portal>
         <Content>
-          <Settings href="/">
+          <Settings href="/dashboard/informacaousuario">
             <AiOutlineSetting />
           </Settings>
           <Container
@@ -184,7 +201,7 @@ export const Avatar = ({ infoUser, openMenu }: RootProps) => {
           >
             <Img
               size="large"
-              src={infoUser.imageUserUrl || ImageAvatar}
+              src={user?.imageURL || ImageAvatar}
               width={50}
               height={50}
               alt="Radix UI"
@@ -210,8 +227,12 @@ export const Avatar = ({ infoUser, openMenu }: RootProps) => {
                   css={{
                     fontWeight: 'bold',
                   }}
-                >{`${nameArray[0]} ${nameArray[1]}`}</Text>
-                <Text colors="green900">{infoUser.status}</Text>
+                >
+                  {nameArray === undefined
+                    ? ''
+                    : `${nameArray[0]} ${nameArray[1]}`}
+                </Text>
+                <Text colors="green900">{user?.status}</Text>
               </div>
               <div
                 style={{
@@ -220,14 +241,12 @@ export const Avatar = ({ infoUser, openMenu }: RootProps) => {
                   minWidth: '100%',
                 }}
               >
-                <Text colors="green50">Faculdade: {infoUser.college}</Text>
-                <Text colors="green50">Curso: {infoUser.course}</Text>
+                <Text colors="green50">Faculdade: {user?.college}</Text>
+                <Text colors="green50">Curso: {user?.course}</Text>
               </div>
               <Container gap="large">
                 <Container gap="small">
-                  <Text colors="green50">
-                    Matrícula: {infoUser.registration}
-                  </Text>
+                  <Text colors="green50">Matrícula: {user?.registration}</Text>
                 </Container>
               </Container>
             </Container>

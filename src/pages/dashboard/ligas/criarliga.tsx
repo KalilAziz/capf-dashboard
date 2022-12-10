@@ -2,7 +2,6 @@ import { useContext, useState } from 'react'
 import { FaUsers } from 'react-icons/fa'
 import { Box } from '../../../components/Box'
 import { Button } from '../../../components/Button'
-import { Dashboard } from '../../../components/Dashboard'
 import { Heading } from '../../../components/Heading'
 import { Input } from '../../../components/input'
 import { Text } from '../../../components/Text'
@@ -117,7 +116,7 @@ const CreateLeague = () => {
   }
 
   return (
-    <Dashboard>
+    <>
       <Heading css={{ textAlign: 'center' }}>
         <Text as="h2" colors="green50" size="2xl">
           Criar Liga
@@ -236,7 +235,7 @@ const CreateLeague = () => {
         </Container>
       </Box>
       <ToastContainer />
-    </Dashboard>
+    </>
   )
 }
 

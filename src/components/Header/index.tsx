@@ -293,13 +293,6 @@ const ButtonsTheLog = styled('div', {
 
 interface HeaderContainerProps {
   children: ReactNode
-  imageUserUrl: string
-  name: string
-  status: string
-  college: string
-  course: string
-  period: string
-  registration: string
 }
 
 const HeaderContainer = ({ children }: HeaderContainerProps) => {
@@ -314,16 +307,6 @@ const HeaderContainer = ({ children }: HeaderContainerProps) => {
     setMounted(true)
   }, [])
 
-  // pegar url
-
-  const user = {
-    name: 'Kalil Aziz Santos Chami',
-    status: 'Aluno',
-    imageUserUrl: '',
-    college: 'Puc',
-    course: 'Medicina',
-    registration: '202002444',
-  }
   return (
     <>
       <ToggleMenu openMenu={isMenuOpen}>
@@ -333,7 +316,7 @@ const HeaderContainer = ({ children }: HeaderContainerProps) => {
         </button>
       </ToggleMenu>
       <Container openMenu={isMenuOpen}>
-        <Avatar openMenu={isMenuOpen} infoUser={user} />
+        {mounted && <Avatar openMenu={isMenuOpen} />}
         <Navbar openMenu={isMenuOpen}>
           <Ul>{children}</Ul>
         </Navbar>

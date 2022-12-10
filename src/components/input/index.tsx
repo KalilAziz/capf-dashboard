@@ -29,6 +29,7 @@ const inputInput = styled('input', {
   width: '100%',
   height: '100%',
   backgroundColor: 'transparent',
+  fontSize: '$md',
 
   '&:disabled': {
     cursor: 'not-allowed',

@@ -66,8 +66,12 @@ export const Card = styled('div', {
     eventInactive: {
       true: {
         opacity: 0.5,
-        pointerEvents: 'none',
         cursor: 'not-allowed',
+
+        'a, button': {
+          cursor: 'not-allowed',
+          pointerEvents: 'none',
+        },
       },
     },
   },

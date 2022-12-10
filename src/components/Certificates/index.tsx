@@ -65,7 +65,7 @@ export const Certificates = ({ certificate }: CertificatesProps) => {
     <>
       <ImageNotEvents src={notEvent} alt="No Events" />
       <Text as="h2" size="lg" colors="black">
-        Não há eventos cadastrados
+        Não há certificados cadastrados
       </Text>
     </>
   )

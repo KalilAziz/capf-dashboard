@@ -10,6 +10,7 @@ import { firebaseApp } from '../../config/firebaseConfig'
 
 import { useRouter } from 'next/router'
 import useMediaQuery from '../../hooks/MediaQuery'
+import { toast } from 'react-toastify'
 
 interface EventProps {
   event: {
@@ -25,8 +26,6 @@ export const Event = ({ event }: EventProps) => {
   const viewButton = useMediaQuery('(max-width: 640px)')
   const router = useRouter()
   const dirRouter = router.pathname.includes('/dashboard/ligas/')
-
-  console.log(event)
 
   const handleDeleteEvent = async () => {
     const docRef = doc(
@@ -44,6 +43,17 @@ export const Event = ({ event }: EventProps) => {
         events: newEvents,
       })
     }
+
+    toast.success('Evento excluido com sucesso', {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'dark',
+    })
   }
 
   //  compare event.data com data atual
@@ -57,83 +67,85 @@ export const Event = ({ event }: EventProps) => {
   }
 
   return (
-    <Card eventInactive={eventInactive}>
-      {viewButton && (
-        <Text as="h3" colors="green50" size="2xl">
-          <strong>{event?.name}</strong>
-        </Text>
-      )}
-      <Image src={eventImage} alt="" />
-      {!viewButton && (
-        <Text as="span" colors="green50" size="2xl">
-          <strong>{event?.name}</strong>
-        </Text>
-      )}
-
-      {viewButton && (
-        <Buttons dirRouter={dirRouter}>
-          <Link
-            className="aboutUs"
-            href={`${event.idLeague}/evento/${event.id}`}
-          >
-            <Button>
-              <Text as="span" colors="green500">
-                <strong>Ver mais</strong>
-              </Text>
-            </Button>
-          </Link>
-          <Button className="delete" onClick={handleDeleteEvent}>
-            <Text as="span" colors="green50">
-              <strong>Excluir</strong>
-            </Text>
-          </Button>
-        </Buttons>
-      )}
-      <div className="contentHover">
-        <Heading>
+    <>
+      <Card eventInactive={eventInactive}>
+        {viewButton && (
           <Text as="h3" colors="green50" size="2xl">
             <strong>{event?.name}</strong>
           </Text>
-        </Heading>
-        <Text as="span" colors="green50">
-          <strong>{event?.data}</strong>
-        </Text>
-        <Text as="p" colors="green50">
-          <strong>{event?.description}</strong>
-        </Text>
+        )}
+        <Image src={eventImage} alt="" />
+        {!viewButton && (
+          <Text as="span" colors="green50" size="2xl">
+            <strong>{event?.name}</strong>
+          </Text>
+        )}
 
-        <Buttons dirRouter={dirRouter}>
-          {dirRouter ? (
+        {viewButton && (
+          <Buttons dirRouter={dirRouter}>
             <Link
               className="aboutUs"
-              href={`${event.idLeague}/evento/${event?.id}`}
+              href={`${event.idLeague}/evento/${event.id}`}
             >
               <Button>
                 <Text as="span" colors="green500">
-                  <strong>Ver mais</strong>
+                  <strong>Saiba mais</strong>
                 </Text>
               </Button>
             </Link>
-          ) : (
-            <Link
-              className="aboutUs"
-              href={`/dashboard/eventosdisponiveis/${event.idLeague}/evento/${event?.id}`}
-            >
-              <Button>
-                <Text as="span" colors="green500">
-                  <strong>Ver maisss</strong>
-                </Text>
-              </Button>
-            </Link>
-          )}
-
-          <Button className="delete" onClick={handleDeleteEvent}>
-            <Text as="span" colors="green50">
-              <strong>Excluir</strong>
+            <Button className="delete" onClick={handleDeleteEvent}>
+              <Text as="span" colors="green50">
+                <strong>Excluir</strong>
+              </Text>
+            </Button>
+          </Buttons>
+        )}
+        <div className="contentHover">
+          <Heading>
+            <Text as="h3" colors="green50" size="2xl">
+              <strong>{event?.name}</strong>
             </Text>
-          </Button>
-        </Buttons>
-      </div>
-    </Card>
+          </Heading>
+          <Text as="span" colors="green50">
+            <strong>{event?.data}</strong>
+          </Text>
+          <Text as="p" colors="green50">
+            <strong>{event?.description}</strong>
+          </Text>
+
+          <Buttons dirRouter={dirRouter}>
+            {dirRouter ? (
+              <Link
+                className="aboutUs"
+                href={`${event.idLeague}/evento/${event?.id}`}
+              >
+                <Button>
+                  <Text as="span" colors="green500">
+                    <strong>Saiba mais</strong>
+                  </Text>
+                </Button>
+              </Link>
+            ) : (
+              <Link
+                className="aboutUs"
+                href={`/dashboard/eventosdisponiveis/${event.idLeague}/evento/${event?.id}`}
+              >
+                <Button>
+                  <Text as="span" colors="green500">
+                    <strong>Saiba mais</strong>
+                  </Text>
+                </Button>
+              </Link>
+            )}
+
+            <Button className="delete" onClick={handleDeleteEvent}>
+              <Text as="span" colors="green50">
+                <strong>Excluir</strong>
+              </Text>
+            </Button>
+          </Buttons>
+        </div>
+      </Card>
+    </>
   )
 }
